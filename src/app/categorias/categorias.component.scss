@@ -1,0 +1,6 @@
+.imagen-especifica {
+    width: 100px;  /* Cambia este valor al tamaño deseado */
+    height: 50px; /* Cambia este valor al tamaño deseado */
+    object-fit: contain; /* Ajusta la imagen sin cortar */
+    display: block; /* Elimina el espacio debajo de la imagen */ 
+}

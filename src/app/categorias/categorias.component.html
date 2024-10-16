@@ -1,0 +1,443 @@
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800 titulo">{{"CU_ADMIN_CATEGORIAS.TITULO_ADMIN_CATEGORIAS"| translate}}</h1>
+  </div>
+  
+  <form>
+    <div class="card border-left-primary shadow h-100 py-2">
+      <div class="card-body row">
+        <div class="col-md-12">
+          <div class="d-flex justify-content-end">
+            <div class="ml-auto">
+              <button
+                class="btn btn-secondary btn-icon-split me-2"
+                type="button"
+                data-toggle="modal"
+                #closebuttonCrear
+                data-target="#crearModal"
+                data-backdrop="false"
+              >
+                <span class="me-2 icon text-white-50">
+                  <i class="fas fa-plus"></i>
+                </span>
+                <span class="text">{{ 'BOTON_CREAR' | translate }}</span>
+              </button>
+              <button class="btn btn-secondary btn-icon-split me-2" type="button">
+                <span class="icon text-white-50 me-2">
+                  <i class="fas fa-file-excel"></i>
+                </span>
+                <span class="text">{{ 'BOTON_EXPORTAR' | translate }}</span>
+              </button>
+              <button class="btn btn-secondary btn-icon-split" type="button">
+                <span class="icon text-white-50 me-2">
+                  <i class="fas fa-sync"></i>
+                </span>
+                <span class="text">{{ 'BOTON_REFRESCAR' | translate }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-6">
+              <label>
+                <h6 class="m-0 font-weight-bold">{{"CU_ADMIN_CATEGORIAS.BUSCAR_CATEGORIA"|translate}}</h6>
+              </label>
+              <input
+                type="text"
+                class="form-control form-control-user"
+                name="searchTerm"
+                [(ngModel)]="service.searchTerm"
+                placeholder="{{'BOTON_BUSCAR'|translate}}"
+              />
+            </div>
+            <div class="col-md-6">
+              <br />
+              <span class="col col-form-label" *ngIf="service.loading$ | async"
+                >{{"CAMPO_BUSCANDO"|translate}}</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  
+  <form>
+    <div class="card border-left-primary shadow h-100 py-2 mt-4 px-4">
+      <div class="card-body row">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col" sortableCate="id" >#</th>
+              <th scope="col" sortableCate="nombre" >
+                {{"Nombre"|translate}}
+              </th>
+              <th scope="col" sortableCate="estado" >
+                {{"TITULO_ESTADO"|translate}}
+              </th>
+              
+              <th scope="col"  >
+                {{"TITULO_ACCIONES"|translate}}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let country of countries$ | async">
+              <th scope="row">{{ country.id }}</th>
+              <td>
+                <ngb-highlight
+                  [result]="country.nombre"
+                  [term]="service.searchTerm"
+                ></ngb-highlight>
+              </td>
+              <td>
+                <ngb-highlight
+                  [result]="country.estado"
+                  [term]="service.searchTerm"
+                ></ngb-highlight>
+              </td>
+              <td>
+                <button class="btn mx-1" type="button" ngbTooltip="Detalle" data-toggle="modal"
+                  data-target="#detalleModal" data-backdrop="false">
+                  <span class="icon">
+                    <i class="fas fa-eye"></i>
+                  </span>
+                </button>
+                <button (click)="resetearFormulario();obtenerObjeto(country)" class="btn mx-1" type="button" data-backdrop="false" ngbTooltip="Editar" #closebuttonModificar data-toggle="modal"
+                  data-target="#editModal">
+                  <span class="icon">
+                    <i class="fas fa-edit"></i>
+                  </span>
+                </button>
+  
+                <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+                  aria-expanded="false" ngbTooltip="Estado">
+                  <i class="fas fa-power-off"></i>
+                </button>
+                <div class="dropdown-menu">
+                  <button class="dropdown-item">
+                    <i class="fas fa-check"></i>
+                    Acivar
+                  </button>
+                  <button class="dropdown-item">
+                    <i class="fas fa-times"></i>
+                    Inactivar
+                  </button>
+                </div>
+              </td>
+             
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  
+    <div class="d-flex justify-content-between p-2">
+      <!-- <ngb-pagination
+          [collectionSize]="(total$ | async)!" [(page)]="service.page" [pageSize]="service.pageSize">
+        </ngb-pagination> -->
+  
+      <select
+        class="custom-select"
+        style="width: auto"
+        name="pageSize"
+        [(ngModel)]="service.pageSize"
+      >
+        <option [ngValue]="2">2 items per page</option>
+        <option [ngValue]="4">4 items per page</option>
+        <option [ngValue]="6">6 items per page</option>
+      </select>
+    </div>
+  </form>
+  
+  <!-- crear Modal -->
+  <div
+    class="modal fade"
+    id="crearModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="crearModalLabel"
+    aria-hidden="true"
+  >
+    <div
+      class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg"
+    >
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="crearModalLabel" style="color: black">
+            {{ "CU_ADMIN_CATEGORIAS.CREAR_CATEGORIA_TITLE" | translate }}
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span class="icon">
+              <i class="fas fa-times-circle"></i>
+            </span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="categoriaForm" (ngSubmit)="guardarCategoria()">
+            <div class="card border-left-primary shadow h-100 py-2">
+              <div class="card-body row">
+                <div class="form-group" style="color: black">
+                  <div class="row paddingtop">
+                    <!-- nombre -->
+                    <div  class="d-flex col-md-12  align-items-center">
+                      <div class="col-md-3 mt-2">
+                        <label>
+                          <h6 class="m-0 font-weight-bold">
+                            {{ "CU_ADMIN_CATEGORIAS.NOMBRE_CATEGORIA" | translate }} *
+                          </h6>
+                        </label>
+                      </div>
+                      <div class="col-md-6 mt-2 ">
+                        <input
+                          type="text"
+                          class="form-control form-control-user"
+                          name="searchTerm"
+                          formControlName="nombre"
+                          required="true"
+                          [class.is-invalid]="
+                            validarCampoObligatorio('nombre')
+                          "
+                          placeholder="{{
+                            'CU_ADMIN_CATEGORIAS.NOMBRE_CATEGORIA' | translate
+                          }}"
+                        />
+                        <small
+                          *ngIf="validarCampoObligatorio('numeroDocumento')"
+                          class="text-danger"
+                          >{{ "CAMPO_OBLIGATORIO" | translate }}</small
+                        >
+                      </div>
+                    </div>
+                    
+  
+                    <!-- Botones -->
+                    <div class="col-md-12 mt-4 ">
+                      <div class="d-flex justify-content-between  ">
+                        <div class="ml-auto  px-2 d-flex justify-content-between">
+                          <button
+                            class="btn btn-secondary btn-icon-split mr-2"
+                            type="submit"
+                            id="closeModal"
+                          >
+                            <span class="icon text-white-50 mr-1">
+                              <i class="fas fa-save"></i>
+                            </span>
+                            <span class="text">{{
+                              "BOTON_CREAR" | translate
+                            }}</span>
+                          </button>
+                          <button
+                            class="btn btn-danger btn-icon-split"
+                            type="button"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                          >
+                            <span class="icon text-white-50 mr-1">
+                              <i class="fas fa-times"></i>
+                            </span>
+                            <span class="text">{{
+                              "BOTON_CANCELAR" | translate
+                            }}</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+   <!--  Detalle modal -->
+   <div  class="modal fade" id="detalleModal" tabindex="-1" role="dialog" aria-labelledby="detalleModalLabel"
+   aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+     <div class="modal-content ">
+       <div class="modal-header">
+         <h5 class="modal-title" id="detalleModalLabel" style="color: black;">
+           {{ 'CU_ADMIN_CATEGORIAS.DETALLE_CATEGORIA' | translate }}</h5>
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span class="icon">
+             <i class="fas fa-times-circle"></i>
+           </span>
+         </button>
+       </div>
+       <div class="modal-body">
+  
+         <form >
+           <div class="grid justify-content-center col-md-12 gap-5">
+             
+             <!-- Persona -->
+  
+             <div class=" card border-left-primary shadow h-100 py-2 g-col-6 p-2">
+               <div class="card-body row">
+  
+                 <div class="form-group" style="color: black;">
+  
+                   <div class="row paddingtop">
+                     
+  
+                     <!-- Nombre -->
+                     <div class="d-flex col-md-12 ">
+                       <div class="col-md-6">
+                         <label>
+                           <h6 class="m-0 font-weight-bold">{{'CU_ADMIN_CATEGORIAS.NOMBRE_CATEGORIA' | translate
+                             }}</h6>
+                         </label>
+                       </div>
+                       <div class="col-md-6">
+                         <label>prueba</label>
+                       </div>
+                     </div>
+                     <!-- Estado -->
+                     <div class="d-flex col-md-12 ">
+                       <div class="col-md-6">
+                         <label>
+                           <h6 class="m-0 font-weight-bold">{{'TITULO_ESTADO' | translate
+                             }}</h6>
+                         </label>
+                       </div>
+                       <div class="col-md-6">
+                         <label>prueba</label>
+                       </div>
+                     </div>
+  
+                     
+  
+                   </div>
+  
+                 </div>
+  
+               </div>
+  
+             </div>
+  
+           </div>
+  
+         </form>
+  
+       </div>
+     </div>
+   </div>
+  </div>
+
+    <!-- modificar Modal -->
+    <div
+    class="modal fade"
+    id="editModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="editModalLabel"
+    aria-hidden="true"
+  >
+    <div
+      class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg"
+    >
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="crearModalLabel" style="color: black">
+            {{ "CU_ADMIN_CATEGORIAS.MODIFICAR_CATEGORIA_TITLE" | translate }}
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span class="icon">
+              <i class="fas fa-times-circle"></i>
+            </span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="categoriaForm" (ngSubmit)="editarCategoria()">
+            <div class="card border-left-primary shadow h-100 py-2">
+              <div class="card-body row">
+                <div class="form-group" style="color: black">
+                  <div class="row paddingtop">
+                    <!-- nombre -->
+                    <div  class="d-flex col-md-12  align-items-center">
+                      <div class="col-md-3 mt-2">
+                        <label>
+                          <h6 class="m-0 font-weight-bold">
+                            {{ "CU_ADMIN_CATEGORIAS.NOMBRE_CATEGORIA" | translate }} *
+                          </h6>
+                        </label>
+                      </div>
+                      <div class="col-md-6 mt-2 ">
+                        <input
+                          type="text"
+                          class="form-control form-control-user"
+                          name="searchTerm"
+                          formControlName="nombre"
+                          required="true"
+                          [class.is-invalid]="
+                            validarCampoObligatorio('nombre')
+                          "
+                          placeholder="{{
+                            'CU_ADMIN_CATEGORIAS.NOMBRE_CATEGORIA' | translate
+                          }}"
+                        />
+                        <small
+                          *ngIf="validarCampoObligatorio('numeroDocumento')"
+                          class="text-danger"
+                          >{{ "CAMPO_OBLIGATORIO" | translate }}</small
+                        >
+                      </div>
+                    </div>
+                    
+  
+                    <!-- Botones -->
+                    <div class="col-md-12 mt-4 ">
+                      <div class="d-flex justify-content-between  ">
+                        <div class="ml-auto  px-2 d-flex justify-content-between">
+                          <button
+                            class="btn btn-secondary btn-icon-split mr-2"
+                            type="submit"
+                            id="closeModal"
+                          >
+                            <span class="icon text-white-50 mr-1">
+                              <i class="fas fa-save"></i>
+                            </span>
+                            <span class="text">{{
+                              "BOTON_GUARDAR" | translate
+                            }}</span>
+                          </button>
+                          <button
+                            class="btn btn-danger btn-icon-split"
+                            type="button"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                          >
+                            <span class="icon text-white-50 mr-1">
+                              <i class="fas fa-times"></i>
+                            </span>
+                            <span class="text">{{
+                              "BOTON_CANCELAR" | translate
+                            }}</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
