@@ -4,13 +4,13 @@ import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 
 import {DecimalPipe} from '@angular/common';
 import {debounceTime, delay, switchMap, tap} from 'rxjs/operators';
-import {SortColumnCate, SortDirection} from '../../sortable/sortableCategoria.directive';
+import {SortColumnProve, SortDirection} from '../../sortable/sortableProvedor.directive';
 import { CategoriasService } from 'src/app/services/negocio/categorias/categorias.service';
-import { Categorias } from '../../model/categorias';
+import { Proveedor } from '../../model/proveedor';
 import { NgxSpinnerService } from "ngx-spinner";
 
 interface SearchResult {
-  countries: Categorias[];
+  countries: Proveedor[];
   total: number;
 }
 
@@ -18,13 +18,13 @@ interface State {
   page: number;
   pageSize: number;
   searchTerm: string;
-  sortColumn: SortColumnCate;
+  sortColumn: SortColumnProve;
   sortDirection: SortDirection;
 }
 
 const compare = (v1: string | number, v2: string | number) => v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
 
-function sort(countries: Categorias[], column: SortColumnCate, direction: string): Categorias[] {
+function sort(countries: Proveedor[], column: SortColumnProve, direction: string): Proveedor[] {
   if (direction === '' || column === '') {
     return countries;
   } else {
@@ -35,20 +35,20 @@ function sort(countries: Categorias[], column: SortColumnCate, direction: string
   }
 }
 
-function matches(country: Categorias, term: string, pipe: PipeTransform) {
-  return country.nombreCategoria.toLowerCase().includes(term.toLowerCase())
-    ||country.estadoCategoria.toLowerCase().includes(term.toLowerCase())
+function matches(country: Proveedor, term: string, pipe: PipeTransform) {
+  return country.nombreProveedor.toLowerCase().includes(term.toLowerCase())
+    ||country.estado.toLowerCase().includes(term.toLowerCase())
   
 }
 
 @Injectable({providedIn: 'root'})
 
-export class CategoriaService {
- 
-  listaCategorias:Categorias[]=[];
+export class ProvedorSortService {
+
+  listaCategorias:Proveedor[]=[];
   private _loading$ = new BehaviorSubject<boolean>(true);
   private _search$ = new Subject<void>();
-  private _countries$ = new BehaviorSubject<Categorias[]>([]);
+  private _countries$ = new BehaviorSubject<Proveedor[]>([]);
   private _total$ = new BehaviorSubject<number>(0);
 
   private _state: State = {
@@ -103,7 +103,7 @@ export class CategoriaService {
   set page(page: number) { this._set({page}); }
   set pageSize(pageSize: number) { this._set({pageSize}); }
   set searchTerm(searchTerm: string) { this._set({searchTerm}); }
-  set sortColumn(sortColumn: SortColumnCate) { this._set({sortColumn}); }
+  set sortColumn(sortColumn: SortColumnProve) { this._set({sortColumn}); }
   set sortDirection(sortDirection: SortDirection) { this._set({sortDirection}); }
 
   private _set(patch: Partial<State>) {

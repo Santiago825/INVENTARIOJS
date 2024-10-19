@@ -25,6 +25,11 @@
   "TITULO_NINGUNO": "Ninguno",
   "TITULO_ESTADO": "Estado",
   "TITULO_NOMBRE": "Nombre",
+  "TITULO_TELEFONO": "Telefono",
+  "TITULO_DIRECCION": "Direccion",
+  "TITULO_EMAIL": "Email",
+  "TITULO_DEPARTAMENTO": "Departamento",
+  "TITULO_MUNICIPIO": "Municipio",
   "TITULO_ACCIONES": "Acciones",
   "CAMPO_OBLIGATORIO": "Campo obligatorio",
   "CANTIDAD_CARACTERES": "Supera la longitud máxima",
@@ -48,7 +53,8 @@
   "TOOLTIP_ACTIVO": "Activo",
   "TOOLTIP_DESBLOQUEAR": "Desbloquear",
   "TOOLTIP_ELIMINAR": "Eliminar",
-  
+  "TEXTO_CONFIRMACION_CREAR_CATEGORIA": "¿Está seguro de crear la categoria?",
+
 
   "CU_ADMIN_PRODUCTOS":{
     "TITULO_ADMIN_PRODUCTOS":"Administración de productos",
@@ -66,5 +72,9 @@
     "NOMBRE_CATEGORIA":"Nombre categoria",
     "BUSCAR_CATEGORIA":"Buscar categoria",
     "DETALLE_CATEGORIA":"Detalles categoria"
+  },
+  "CU_ADMIN_PROVEEDOR":{
+
+
   }
 }

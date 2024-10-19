@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -12,7 +13,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations'
 import { SublevelMenuComponent } from './layout/sidenav/sublevel-menu.component';
 import { ProductosComponent } from './productos/productos.component';
 import { FormsModule } from '@angular/forms';
-import { NgbPaginationModule,NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbPaginationModule,NgbTypeaheadModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbdSortableHeader } from './sortable/sortable.directive';
 import { NgbdSortableHeaderCategoria } from './sortable/sortableCategoria.directive';
 
@@ -32,6 +33,7 @@ import {
   HttpClient,
   HttpClientModule,
 } from '@angular/common/http';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -56,9 +58,11 @@ import { ReactiveFormsModule } from '@angular/forms';
   ],
   imports: [
     BrowserModule,
+    NgxSpinnerModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    NgSelectModule,
     RouterModule,
     FormsModule,
     NgbPaginationModule,
@@ -72,7 +76,7 @@ import { ReactiveFormsModule } from '@angular/forms';
         useFactory: httpTranslateLoader,
         deps: [HttpClient],
       },
-    }),
+    }), NgbModule,
    
   ],
   providers: [],

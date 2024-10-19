@@ -2,14 +2,14 @@ import {Validators } from '@angular/forms';
 
 
 export interface Categorias {
-	id: number;
-	nombre: string;
-	estado:string;
+	idCategoria: number;
+	nombreCategoria: string;
+	estadoCategoria:string;
 	
 }
 
 export let CATEGORIAFORM = {
 	idCategoria:[],
-	nombre:['',Validators.required],
-	estadoAliado:[''],
+	nombreCategoria:['',Validators.required],
+	estadoCategoria:[''],
   };
