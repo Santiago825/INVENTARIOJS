@@ -3,7 +3,7 @@ import { Component, QueryList, ViewChildren, OnInit,ViewChild } from '@angular/c
 import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { Categorias,CATEGORIAFORM } from '../model/categorias';
-import { CategoriaService } from '../services/categoria/categoria.service';
+import { CategoriaSortService } from '../services/sort/categoria/categoria-sort.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   NgbdSortableHeaderCategoria,
@@ -18,7 +18,7 @@ import Swal from 'sweetalert2';
   selector: 'app-categorias',
   templateUrl: './categorias.component.html',
   styleUrls: ['./categorias.component.scss'],
-  providers: [CategoriaService, DecimalPipe],
+  providers: [CategoriaSortService, DecimalPipe],
 })
 export class CategoriasComponent {
   countries$: Observable<Categorias[]>;
@@ -36,7 +36,7 @@ export class CategoriasComponent {
   isDropdownOpen = false;
 
   constructor(
-    public service: CategoriaService,
+    public service: CategoriaSortService,
     public translate: TranslateService,
 	  public fb: FormBuilder,
 	  public serviceGenerico: GenericoService,

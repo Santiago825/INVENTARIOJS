@@ -11,21 +11,21 @@ export interface SortEvent {
 }
 
 @Directive({
-  selector: 'th[sortable]',
+  selector: 'th[sortableProdu]',
   host: {
     '[class.asc]': 'direction === "asc"',
     '[class.desc]': 'direction === "desc"',
     '(click)': 'rotate()'
   }
 })
-export class NgbdSortableHeader {
-	@Input() sortable: SortColumn = '';
-	@Input() direction: SortDirection = '';
+export class NgbdSortableHeaderProducto {
+	@Input() sortableProdu: SortColumn = '';
+	@Input() directionProdu: SortDirection = '';
 	@Output() sort = new EventEmitter<SortEvent>();
   
 	rotate() {
-	  this.direction = rotate[this.direction];
-	  this.sort.emit({column: this.sortable, direction: this.direction});
+	  this.directionProdu = rotate[this.directionProdu];
+	  this.sort.emit({column: this.sortableProdu, direction: this.directionProdu});
 	}
   }
   

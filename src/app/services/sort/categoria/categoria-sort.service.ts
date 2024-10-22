@@ -2,14 +2,15 @@ import {Injectable, PipeTransform} from '@angular/core';
 
 import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 
-import {Productos} from '../../model/productos';
-import {COUNTRIES} from '../../productos/producto';
 import {DecimalPipe} from '@angular/common';
 import {debounceTime, delay, switchMap, tap} from 'rxjs/operators';
-import {SortColumn, SortDirection} from '../../sortable/sortable.directive';
+import {SortColumnCate, SortDirection} from '../../../sortable/sortableCategoria.directive';
+import { CategoriasService } from 'src/app/services/negocio/categorias/categorias.service';
+import { Categorias } from '../../../model/categorias';
+import { NgxSpinnerService } from "ngx-spinner";
 
 interface SearchResult {
-  countries: Productos[];
+  countries: Categorias[];
   total: number;
 }
 
@@ -17,13 +18,13 @@ interface State {
   page: number;
   pageSize: number;
   searchTerm: string;
-  sortColumn: SortColumn;
+  sortColumn: SortColumnCate;
   sortDirection: SortDirection;
 }
 
 const compare = (v1: string | number, v2: string | number) => v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
 
-function sort(countries: Productos[], column: SortColumn, direction: string): Productos[] {
+function sort(countries: Categorias[], column: SortColumnCate, direction: string): Categorias[] {
   if (direction === '' || column === '') {
     return countries;
   } else {
@@ -34,18 +35,20 @@ function sort(countries: Productos[], column: SortColumn, direction: string): Pr
   }
 }
 
-function matches(country: Productos, term: string, pipe: PipeTransform) {
-  return country.nombre.toLowerCase().includes(term.toLowerCase())
-    ||country.categoria.toLowerCase().includes(term.toLowerCase())
-    || pipe.transform(country.cantidad).includes(term)
-    || pipe.transform(country.precio).includes(term);
+function matches(country: Categorias, term: string, pipe: PipeTransform) {
+  return country.nombreCategoria.toLowerCase().includes(term.toLowerCase())
+    ||country.estadoCategoria.toLowerCase().includes(term.toLowerCase())
+  
 }
 
 @Injectable({providedIn: 'root'})
-export class CountryService {
+
+export class CategoriaSortService {
+ 
+  listaCategorias:Categorias[]=[];
   private _loading$ = new BehaviorSubject<boolean>(true);
   private _search$ = new Subject<void>();
-  private _countries$ = new BehaviorSubject<Productos[]>([]);
+  private _countries$ = new BehaviorSubject<Categorias[]>([]);
   private _total$ = new BehaviorSubject<number>(0);
 
   private _state: State = {
@@ -56,7 +59,10 @@ export class CountryService {
     sortDirection: ''
   };
 
-  constructor(private pipe: DecimalPipe) {
+  constructor(private pipe: DecimalPipe, public categoriasService:CategoriasService,
+    private spinner: NgxSpinnerService
+
+  ) {
     this._search$.pipe(
       tap(() => this._loading$.next(true)),
       debounceTime(200),
@@ -69,6 +75,22 @@ export class CountryService {
     });
 
     this._search$.next();
+    this.obtenerCategorias()
+  }
+
+  obtenerCategorias() {
+    this.spinner.show();
+    this.categoriasService.obtenerCategorias().subscribe(
+      (response: any) => {
+        this.listaCategorias = response['lista'];
+        console.log(this.listaCategorias);
+        this.spinner.hide();
+      },
+      (error: any) => {
+        this.spinner.hide();
+       
+      }
+    );
   }
 
   get countries$() { return this._countries$.asObservable(); }
@@ -81,7 +103,7 @@ export class CountryService {
   set page(page: number) { this._set({page}); }
   set pageSize(pageSize: number) { this._set({pageSize}); }
   set searchTerm(searchTerm: string) { this._set({searchTerm}); }
-  set sortColumn(sortColumn: SortColumn) { this._set({sortColumn}); }
+  set sortColumn(sortColumn: SortColumnCate) { this._set({sortColumn}); }
   set sortDirection(sortDirection: SortDirection) { this._set({sortDirection}); }
 
   private _set(patch: Partial<State>) {
@@ -93,7 +115,7 @@ export class CountryService {
     const {sortColumn, sortDirection, pageSize, page, searchTerm} = this._state;
 
     // 1. sort
-    let countries = sort(COUNTRIES, sortColumn, sortDirection);
+    let countries = sort(this.listaCategorias, sortColumn, sortDirection);
 
     // 2. filter
     countries = countries.filter(country => matches(country, searchTerm, this.pipe));
@@ -104,3 +126,4 @@ export class CountryService {
     return of({countries, total});
   }
 }
+

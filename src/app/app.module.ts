@@ -14,8 +14,9 @@ import { SublevelMenuComponent } from './layout/sidenav/sublevel-menu.component'
 import { ProductosComponent } from './productos/productos.component';
 import { FormsModule } from '@angular/forms';
 import { NgbPaginationModule,NgbTypeaheadModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { NgbdSortableHeader } from './sortable/sortable.directive';
+import { NgbdSortableHeaderProducto } from './sortable/sortableProducto.directive';
 import { NgbdSortableHeaderCategoria } from './sortable/sortableCategoria.directive';
+import { NgbdSortableHeaderProvedor } from './sortable/sortableProvedor.directive';
 
 import { CategoriasComponent } from './categorias/categorias.component';
 import { ProvedoresComponent } from './provedores/provedores.component';
@@ -45,7 +46,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     BodyComponent,
     DashboardComponent,
     SublevelMenuComponent,
-    NgbdSortableHeader,
+    NgbdSortableHeaderProducto,
+    NgbdSortableHeaderProvedor,
     NgbdSortableHeaderCategoria,
     ProductosComponent,
     CategoriasComponent,

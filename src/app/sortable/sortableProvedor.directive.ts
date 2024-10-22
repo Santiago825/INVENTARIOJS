@@ -11,7 +11,7 @@ export interface SortEvent {
 }
 
 @Directive({
-  selector: 'th[sortable]',
+  selector: 'th[sortableProve]',
   host: {
     '[class.asc]': 'direction === "asc"',
     '[class.desc]': 'direction === "desc"',
@@ -21,11 +21,11 @@ export interface SortEvent {
 export class NgbdSortableHeaderProvedor {
 	@Input() sortableProve: SortColumnProve = '';
 	@Input() directionProve: SortDirection = '';
-	@Output() sortCate = new EventEmitter<SortEvent>();
+	@Output() sortProve = new EventEmitter<SortEvent>();
   
 	rotate() {
 	  this.directionProve = rotate[this.directionProve];
-	  this.sortCate.emit({column: this.sortableProve, direction: this.directionProve});
+	  this.sortProve.emit({column: this.sortableProve, direction: this.directionProve});
 	}
   }
   

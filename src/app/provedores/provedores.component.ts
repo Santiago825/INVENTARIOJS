@@ -2,15 +2,15 @@ import { DecimalPipe } from '@angular/common';
 import { Component, QueryList, ViewChildren, OnInit,ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import { Categorias,CATEGORIAFORM } from '../model/categorias';
-import { CategoriaService } from '../services/categoria/categoria.service';
+import { PROVEEDOR,Proveedor } from '../model/proveedor';
+import { ProvedorSortService } from '../services/sort/provedor/provedor-sort.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import {
-  NgbdSortableHeaderCategoria,
+  NgbdSortableHeaderProvedor,
   SortEvent,
-} from '../sortable/sortableCategoria.directive';
+} from '../sortable/sortableProvedor.directive';
 import { GenericoService } from 'src/app/services/generico/generico.service';
-import { CategoriasService } from 'src/app/services/negocio/categorias/categorias.service';
+import { ProveedorService } from 'src/app/services/negocio/proveedor/proveedor.service';
 import { NgxSpinnerService } from "ngx-spinner";
 import Swal from 'sweetalert2';
 
@@ -18,14 +18,14 @@ import Swal from 'sweetalert2';
   selector: 'app-provedores',
   templateUrl: './provedores.component.html',
   styleUrls: ['./provedores.component.scss'],
-  providers: [CategoriaService, DecimalPipe],
+  providers: [ProvedorSortService, DecimalPipe],
 })
 export class ProvedoresComponent {
-  countries$: Observable<Categorias[]>;
+  countries$: Observable<Proveedor[]>;
   total$: Observable<number>;
-  categoriaForm: FormGroup;
+  provedorForm: FormGroup;
   categoriaVacio:FormGroup;
-  listaProductos:Categorias[]=[];
+  listaProductos:Proveedor[]=[];
   detallesCategoria: any;
   tipoDepartamento:any
   tipoMunicipios:any
@@ -33,16 +33,16 @@ export class ProvedoresComponent {
   @ViewChild('closebuttonCrear') closebuttonCrear:any;
   @ViewChild('closebuttonModificar') closebuttonModificar:any;
 
-  @ViewChildren(NgbdSortableHeaderCategoria)
-  headers!: QueryList<NgbdSortableHeaderCategoria>;
+  @ViewChildren(NgbdSortableHeaderProvedor)
+  headers!: QueryList<NgbdSortableHeaderProvedor>;
   isDropdownOpen = false;
 
   constructor(
-    public service: CategoriaService,
+    public service: ProvedorSortService,
     public translate: TranslateService,
 	  public fb: FormBuilder,
 	  public serviceGenerico: GenericoService,
-    public categoriasService:CategoriasService,
+    public proveedorsService:ProveedorService,
     private spinner: NgxSpinnerService
 
 
@@ -51,8 +51,8 @@ export class ProvedoresComponent {
     this.countries$ = service.countries$;
     this.total$ = service.total$;
     this.translate.use('es');
-	  this.categoriaForm = this.fb.group(CATEGORIAFORM);
-    this.categoriaVacio= this.fb.group(CATEGORIAFORM);
+	  this.provedorForm = this.fb.group(PROVEEDOR);
+    this.categoriaVacio= this.fb.group(PROVEEDOR);
     this.obtenerDepartamentos()
 
   }
@@ -61,8 +61,8 @@ export class ProvedoresComponent {
   onSort({ column, direction }: SortEvent) {
     // resetting other headers
     this.headers.forEach((header) => {
-      if (header.sortableCate !== column) {
-        header.directionCate = '';
+      if (header.sortableProve !== column) {
+        header.directionProve = '';
       }
     });
 
@@ -71,19 +71,19 @@ export class ProvedoresComponent {
   }
 
   validarCampoObligatorio(campo: string): boolean {
-	return !!(this.categoriaForm.get(campo)?.invalid ?? false) && 
-		   !!(this.categoriaForm.get(campo)?.touched ?? false);
+	return !!(this.provedorForm.get(campo)?.invalid ?? false) && 
+		   !!(this.provedorForm.get(campo)?.touched ?? false);
   }
 
 
-  guardarCategoria(): void {
-	if (this.categoriaForm.invalid) {
-		Object.values(this.categoriaForm.controls).forEach((control) => {
+  guardarProveedor(): void {
+	if (this.provedorForm.invalid) {
+		Object.values(this.provedorForm.controls).forEach((control) => {
 		  control.markAsTouched();
 		});
 		return;
 	  }
-	  if(this.categoriaForm.valid){
+	  if(this.provedorForm.valid){
       
       Swal.fire({
         title: this.serviceGenerico.traduccionMensajeGenerico('TITULO_CONFIRMAR'),
@@ -104,8 +104,8 @@ export class ProvedoresComponent {
       }).then((result) => {
         if (result.value) {
           this.spinner.show();
-          this.categoriasService
-            .crearCategorias(this.categoriaForm.value)
+          this.proveedorsService
+            .crearProveedor(this.provedorForm.value)
             .subscribe({
               next: (resp) => {
 
@@ -116,7 +116,7 @@ export class ProvedoresComponent {
                 //   resp[CONSTANTES.CODIGO_RESPUESTA] &&
                 //   resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
                 // ) {
-                //   this.categoriaForm.reset();
+                //   this.provedorForm.reset();
                 //   this.serviceGenerico.alertaMensajeInformacion(
                 //     resp[CONSTANTES.MENSAJE_RESPUESTA]
                 //   );
@@ -154,14 +154,14 @@ export class ProvedoresComponent {
 		);
 	  }
   }
-  editarCategoria(){
-		if (this.categoriaForm.invalid) {
-      Object.values(this.categoriaForm.controls).forEach((control) => {
+  editarProveedor(){
+		if (this.provedorForm.invalid) {
+      Object.values(this.provedorForm.controls).forEach((control) => {
         control.markAsTouched();
       });
       return;
       }
-      if(this.categoriaForm.valid){
+      if(this.provedorForm.valid){
         
         Swal.fire({
           title: this.serviceGenerico.traduccionMensajeGenerico('TITULO_CONFIRMAR'),
@@ -182,19 +182,18 @@ export class ProvedoresComponent {
         }).then((result) => {
           if (result.value) {
             this.spinner.show();
-            this.categoriasService
-              .modificarCategorias(this.categoriaForm.value)
+            this.proveedorsService
+              .modificarProveedor(this.provedorForm.value)
               .subscribe({
                 next: (resp) => {
   
                   this.spinner.hide();
-                  this.closebuttonModificar.nativeElement.click();
                   this.recargarLista();
                   // if (
                   //   resp[CONSTANTES.CODIGO_RESPUESTA] &&
                   //   resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
                   // ) {
-                  //   this.categoriaForm.reset();
+                  //   this.provedorForm.reset();
                   //   this.serviceGenerico.alertaMensajeInformacion(
                   //     resp[CONSTANTES.MENSAJE_RESPUESTA]
                   //   );
@@ -219,6 +218,7 @@ export class ProvedoresComponent {
                 },
   
                 complete: () => {
+                  this.closebuttonModificar.nativeElement.click();
                   this.spinner.hide();
                 },
               });
@@ -235,48 +235,67 @@ export class ProvedoresComponent {
   }
 
   resetearFormulario(){
-    this.categoriaForm.reset();
-    this.categoriaForm.patchValue(this.categoriaVacio.value);
+    this.provedorForm.reset();
+    this.provedorForm.patchValue(this.categoriaVacio.value);
   }
    recargarLista(){
     this.service.obtenerCategorias();
     this.service.searchTerm = '';
   }
 
-    detalleItem(item:Categorias){
+    detalleItem(item:Proveedor){
       this.mostarDetalleModal = true;
     // Inicializar detallesCategoria si no está inicializado aún
     if (!this.detallesCategoria) {
-        this.detallesCategoria = { nombreCategoria: '', estadoCategoria: '' };
+        this.detallesCategoria = { nombreProveedor: '', estado: '' };
     }
-    this.detallesCategoria.nombreCategoria = item.nombreCategoria;
-    this.detallesCategoria.estadoCategoria = item.estadoCategoria;
+    this.detallesCategoria.nombreProveedor = item.nombreProveedor;
+    this.detallesCategoria.direccion = item.direccion;
+    this.detallesCategoria.email = item.email;
+    this.detallesCategoria.nombreDepartamento = item.nombreDepartamento;
+    this.detallesCategoria.nombreMunicipio = item.nombreMunicipio;
+    this.detallesCategoria.telefono = item.telefono;
+    this.detallesCategoria.estado = item.estado;
+
+    console.log(this.detallesCategoria);
+  }
+  cargarServicios() {
+    
+    this.obtenerDepartamentos();
   }
 
-  cargarModificar(item:Categorias){
+
+  cargarModificar(item:Proveedor){
     this.mostarDetalleModal=false;
-    this.categoriaForm.patchValue({
-      idCategoria: item.idCategoria,
-      nombreCategoria: item.nombreCategoria,
-      estadoCategoria:item.estadoCategoria
+    this.provedorForm.patchValue({
+      idProveedor: item.idProveedor,
+      nombreProveedor: item.nombreProveedor,
+      direccion: item.direccion,
+      email: item.email,
+      telefono: item.telefono,
+      idMunicipio: item.idMunicipio,
+      nombreMunicipio: item.nombreMunicipio,
+
+      idDepartamento: item.idDepartamento,      
+      estado:item.estado
       });
 
   }
-  cambiarEstado(item:Categorias){
+  cambiarEstado(item:Proveedor){
     this.spinner.show();
-    this.categoriasService.cambiarEstadoCategorias(item).subscribe({
-      next: (resp) => {
-        // if (
-        //   resp[CONSTANTES.CODIGO_RESPUESTA] &&
-        //   resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
-        // ) {
-        //   this.serviceGenerico.alertaMensajeInformacion(resp[CONSTANTES.MENSAJE_RESPUESTA]);
+     this.proveedorsService.cambiarEstadoProveedor(item).subscribe({
+       next: (resp) => {
+    //     // if (
+    //     //   resp[CONSTANTES.CODIGO_RESPUESTA] &&
+    //     //   resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
+    //     // ) {
+    //     //   this.serviceGenerico.alertaMensajeInformacion(resp[CONSTANTES.MENSAJE_RESPUESTA]);
 
-           this.recargarLista();
-        // } else {
-        //   this.serviceGenerico.alertaMensajeInformacion(resp[CONSTANTES.MENSAJE_RESPUESTA]);
-        // }
-      },
+          this.recargarLista();
+    //     // } else {
+    //     //   this.serviceGenerico.alertaMensajeInformacion(resp[CONSTANTES.MENSAJE_RESPUESTA]);
+    //     // }
+       },
 
       error: (err: any) => {},
 
@@ -289,11 +308,11 @@ export class ProvedoresComponent {
   }
   
   obtenerMunicipios(id:any) {
-    console.log(id);
-    console.log("aassaa");
+    
     this.spinner.show();
-    this.serviceGenerico.obtenerMunicipios(id).subscribe({
+    this.serviceGenerico.obtenerMunicipios(id.target.value).subscribe({
       next: (resp:any) => {
+        console.log("enamo");
         console.log(resp['lista']);
         this.tipoMunicipios = resp['lista'];
 

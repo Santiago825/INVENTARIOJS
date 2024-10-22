@@ -3,24 +3,24 @@ import {Component, QueryList, ViewChildren,OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import {Productos} from '../model/productos';
-import {CountryService} from '../services/country/country.service';
+import {ProdcutosSortService} from '../services/sort/productos/prodcutos-sort.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import {NgbdSortableHeader, SortEvent} from '../sortable/sortable.directive';
+import {NgbdSortableHeaderProducto, SortEvent} from '../sortable/sortableProducto.directive';
 
 
 @Component({
   selector: 'app-productos',
   templateUrl: './productos.component.html',
   styleUrls: ['./productos.component.css'],
-  providers: [CountryService, DecimalPipe]
+  providers: [ProdcutosSortService, DecimalPipe]
 })
 export class ProductosComponent implements OnInit {
 	countries$: Observable<Productos[]>;
 	total$: Observable<number>;
 
-	@ViewChildren(NgbdSortableHeader) headers!: QueryList<NgbdSortableHeader>;
+	@ViewChildren(NgbdSortableHeaderProducto) headers!: QueryList<NgbdSortableHeaderProducto>;
 
-  constructor(public service: CountryService,    public translate: TranslateService,
+  constructor(public service: ProdcutosSortService,    public translate: TranslateService,
   ) {
 		this.countries$ = service.countries$;
 		this.total$ = service.total$;
@@ -34,8 +34,8 @@ export class ProductosComponent implements OnInit {
   onSort({ column, direction }: SortEvent) {
 		// resetting other headers
 		this.headers.forEach((header) => {
-			if (header.sortable !== column) {
-				header.direction = '';
+			if (header.sortableProdu !== column) {
+				header.directionProdu = '';
 			}
 		});
 

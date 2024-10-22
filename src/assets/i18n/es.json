@@ -74,7 +74,8 @@
     "DETALLE_CATEGORIA":"Detalles categoria"
   },
   "CU_ADMIN_PROVEEDOR":{
-
+    "TITULO_ADMIN_PROVEEDOR":"Administración de proveedores",
+    "NOMBRE_PROVEEDOR":"Nombre proveedor"
 
   }
 }
