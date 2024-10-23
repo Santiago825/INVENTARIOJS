@@ -2,14 +2,15 @@ import {Injectable, PipeTransform} from '@angular/core';
 
 import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 
-import {Productos} from '../../../model/productos';
-import {COUNTRIES} from '../../../productos/producto';
 import {DecimalPipe} from '@angular/common';
 import {debounceTime, delay, switchMap, tap} from 'rxjs/operators';
 import {SortColumn, SortDirection} from '../../../sortable/sortableProducto.directive';
+import { ProductosService } from 'src/app/services/negocio/productos/productos.service';
+import { Producto } from '../../../model/productos';
+import { NgxSpinnerService } from "ngx-spinner";
 
 interface SearchResult {
-  countries: Productos[];
+  countries: Producto[];
   total: number;
 }
 
@@ -23,7 +24,7 @@ interface State {
 
 const compare = (v1: string | number, v2: string | number) => v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
 
-function sort(countries: Productos[], column: SortColumn, direction: string): Productos[] {
+function sort(countries: Producto[], column: SortColumn, direction: string): Producto[] {
   if (direction === '' || column === '') {
     return countries;
   } else {
@@ -34,19 +35,24 @@ function sort(countries: Productos[], column: SortColumn, direction: string): Pr
   }
 }
 
-function matches(country: Productos, term: string, pipe: PipeTransform) {
-  return country.nombre.toLowerCase().includes(term.toLowerCase())
-    ||country.categoria.toLowerCase().includes(term.toLowerCase())
-    || pipe.transform(country.cantidad).includes(term)
-    || pipe.transform(country.precio).includes(term);
+function matches(country: Producto, term: string, pipe: PipeTransform) {
+  return country.nombreProducto.toLowerCase().includes(term.toLowerCase())||
+  country.nombreCategoria.toLowerCase().includes(term.toLowerCase())||
+  country.estadoProducto.toLowerCase().includes(term.toLowerCase())||
+  pipe.transform(country.precioProducto).includes(term)||
+  pipe.transform(country.cantidadProducto).includes(term)
+
+  
 }
 
 @Injectable({providedIn: 'root'})
+
 export class ProdcutosSortService {
 
+  listaCategorias:Producto[]=[];
   private _loading$ = new BehaviorSubject<boolean>(true);
   private _search$ = new Subject<void>();
-  private _countries$ = new BehaviorSubject<Productos[]>([]);
+  private _countries$ = new BehaviorSubject<Producto[]>([]);
   private _total$ = new BehaviorSubject<number>(0);
 
   private _state: State = {
@@ -57,7 +63,10 @@ export class ProdcutosSortService {
     sortDirection: ''
   };
 
-  constructor(private pipe: DecimalPipe) {
+  constructor(private pipe: DecimalPipe, public productosService:ProductosService,
+    private spinner: NgxSpinnerService
+
+  ) {
     this._search$.pipe(
       tap(() => this._loading$.next(true)),
       debounceTime(200),
@@ -70,6 +79,21 @@ export class ProdcutosSortService {
     });
 
     this._search$.next();
+    this.obtenerCategorias()
+  }
+
+  obtenerCategorias() {
+    this.spinner.show();
+    this.productosService.obtenerProductos().subscribe(
+      (response: any) => {
+        this.listaCategorias = response['lista'];
+        this.spinner.hide();
+      },
+      (error: any) => {
+        this.spinner.hide();
+       
+      }
+    );
   }
 
   get countries$() { return this._countries$.asObservable(); }
@@ -94,7 +118,7 @@ export class ProdcutosSortService {
     const {sortColumn, sortDirection, pageSize, page, searchTerm} = this._state;
 
     // 1. sort
-    let countries = sort(COUNTRIES, sortColumn, sortDirection);
+    let countries = sort(this.listaCategorias, sortColumn, sortDirection);
 
     // 2. filter
     countries = countries.filter(country => matches(country, searchTerm, this.pipe));

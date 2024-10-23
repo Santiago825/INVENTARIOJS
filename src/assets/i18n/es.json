@@ -31,6 +31,10 @@
   "TITULO_DEPARTAMENTO": "Departamento",
   "TITULO_MUNICIPIO": "Municipio",
   "TITULO_ACCIONES": "Acciones",
+  "TITULO_PRECIO": "Precio",
+  "TITULO_CATEGORIA": "Categoria",
+  "TITULO_CANTIDAD": "Cantidad",
+  "TITULO_IMAGEN": "Imagen",
   "CAMPO_OBLIGATORIO": "Campo obligatorio",
   "CANTIDAD_CARACTERES": "Supera la longitud máxima",
   "COMPARE_CONTRASEÑA": "Las contraseñas ingresadas no coinciden",
@@ -54,6 +58,7 @@
   "TOOLTIP_DESBLOQUEAR": "Desbloquear",
   "TOOLTIP_ELIMINAR": "Eliminar",
   "TEXTO_CONFIRMACION_CREAR_CATEGORIA": "¿Está seguro de crear la categoria?",
+  "PLACEHOLDER_IMAGEN": "Seleccione imagen",
 
 
   "CU_ADMIN_PRODUCTOS":{

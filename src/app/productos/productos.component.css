@@ -12,4 +12,19 @@
     object-fit: contain; /* Ajusta la imagen sin cortar */
     display: block; /* Elimina el espacio debajo de la imagen */ 
 }
+.imagen-detalles {
+    width: 200px;  /* Cambia este valor al tamaño deseado */
+    height: 100px; /* Cambia este valor al tamaño deseado */
+    object-fit: contain; /* Ajusta la imagen sin cortar */
+    display: block; /* Elimina el espacio debajo de la imagen */ 
+}
 
+.custom-file-label {
+    height: 40px; /* Asegúrate de que la altura sea fija */
+    line-height: 30px; /* Alineación vertical del texto */
+    overflow: hidden; /* Oculta cualquier contenido que se desborde */
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+    text-overflow: ellipsis; /* Agrega puntos suspensivos al texto largo */
+    display: block; /* Asegura que se comporte como un bloque */
+    box-sizing: border-box; /* Incluye padding en el tamaño total */
+  }

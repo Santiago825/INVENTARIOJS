@@ -1,467 +1,653 @@
+
+<ngx-spinner
+  bdColor="rgba(208, 207, 208, 0.8)"
+  template="<img src='../../assets/photos/load.gif' />"
+>
+Cargando
+</ngx-spinner>
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-  <h1 class="h3 mb-0 text-gray-800 titulo">
-    {{ "CU_ADMIN_PRODUCTOS.TITULO_ADMIN_PRODUCTOS" | translate }}
-  </h1>
-</div>
-
-<form>
-  <div class="card border-left-primary shadow h-100 py-2">
-    <div class="card-body row">
-      <div class="col-md-12">
-        <div class="d-flex justify-content-end">
-          <div class="ml-auto">
-            <button class="btn btn-secondary btn-icon-split me-2" type="button" data-toggle="modal" #closebuttonCrear
-              data-target="#crearModal" data-backdrop="false">
-              <span class="me-2 icon text-white-50">
-                <i class="fas fa-plus"></i>
-              </span>
-              <span class="text">{{ "BOTON_CREAR" | translate }}</span>
-            </button>
-            <button class="btn btn-secondary btn-icon-split me-2" type="button">
-              <span class="icon text-white-50 me-2">
-                <i class="fas fa-file-excel"></i>
-              </span>
-              <span class="text">{{ "BOTON_EXPORTAR" | translate }}</span>
-            </button>
-            <button class="btn btn-secondary btn-icon-split" type="button">
-              <span class="icon text-white-50 me-2">
-                <i class="fas fa-sync"></i>
-              </span>
-              <span class="text">{{ "BOTON_REFRESCAR" | translate }}</span>
-            </button>
+    <h1 class="h3 mb-0 text-gray-800 titulo">{{"CU_ADMIN_PRODUCTOS.TITULO_ADMIN_PRODUCTOS"| translate}}</h1>
+  </div>
+  
+  <form>
+    <div class="card border-left-primary shadow h-100 py-2">
+      <div class="card-body row">
+        <div class="col-md-12">
+          <div class="d-flex justify-content-end">
+            <div class="ml-auto">
+              <button
+              (click)="resetearFormulario()"
+                class="btn btn-secondary btn-icon-split me-2"
+                type="button"
+                data-toggle="modal"
+                #closebuttonCrear
+                data-target="#crearModal"
+                data-backdrop="false"
+              >
+                <span class="me-2 icon text-white-50">
+                  <i class="fas fa-plus"></i>
+                </span>
+                <span class="text">{{ 'BOTON_CREAR' | translate }}</span>
+              </button>
+              <button class="btn btn-secondary btn-icon-split me-2" type="button">
+                <span class="icon text-white-50 me-2">
+                  <i class="fas fa-file-excel"></i>
+                </span>
+                <span class="text">{{ 'BOTON_EXPORTAR' | translate }}</span>
+              </button>
+              <button (click)="this.recargarLista()" class="btn btn-secondary btn-icon-split" type="button">
+                <span class="icon text-white-50 me-2">
+                  <i class="fas fa-sync"></i>
+                </span>
+                <span class="text">{{ 'BOTON_REFRESCAR' | translate }}</span>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div class="col-md-12">
-        <div class="row">
-          <div class="col-md-6">
-            <label>
-              <h6 class="m-0 font-weight-bold">Buscar productos</h6>
-            </label>
-            <input type="text" class="form-control form-control-user" name="searchTerm" [(ngModel)]="service.searchTerm"
-              placeholder="{{ 'BOTON_BUSCAR' | translate }}" />
-          </div>
-          <div class="col-md-6">
-            <br />
-            <span class="col col-form-label" *ngIf="service.loading$ | async">{{
-              "CAMPO_BUSCANDO" | translate
-              }}</span>
+  
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-6">
+              <label>
+                <h6 class="m-0 font-weight-bold">{{"CU_ADMIN_CATEGORIAS.BUSCAR_CATEGORIA"|translate}}</h6>
+              </label>
+              <input
+                type="text"
+                class="form-control form-control-user"
+                name="searchTerm"
+                [(ngModel)]="service.searchTerm"
+                placeholder="{{'BOTON_BUSCAR'|translate}}"
+              />
+            </div>
+            <div class="col-md-6">
+              <br />
+              <span class="col col-form-label" *ngIf="service.loading$ | async"
+                >{{"CAMPO_BUSCANDO"|translate}}</span
+              >
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</form>
+  </form>
+  
+  <form>
+    <div class="card border-left-primary shadow h-100 py-2 mt-4 px-4">
+      <div class="card-body row">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col" sortableCate="idCategoria" >#</th>
+              <th scope="col" sortableCate="nombreCategoria" >
+                {{"Nombre"|translate}}
+              </th>
+              <th scope="col" sortableCate="nombreCategoria" >
+                {{"TITULO_PRECIO"|translate}}
+              </th>
+              <th scope="col" sortableCate="nombreCategoria" >
+                {{"TITULO_CANTIDAD"|translate}}
+              </th>
+              <th scope="col" sortableCate="nombreCategoria" >
+                {{"TITULO_CATEGORIA"|translate}}
+              </th>
+              <th class="d-flex justify-content-center" scope="col" sortableCate="nombreCategoria" >
+                {{"TITULO_IMAGEN"|translate}}
+              </th>
+              <th scope="col" sortableCate="estadoCategoria" >
+                {{"TITULO_ESTADO"|translate}}
+              </th>
+              
+              <th scope="col"  >
+                {{"TITULO_ACCIONES"|translate}}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of countries$ |  async; let i = index">
+              <th scope="row">{{ i+1 }}</th>
+              <td>
+                <ngb-highlight
+                  [result]="item.nombreProducto"
+                  [term]="service.searchTerm"
+                ></ngb-highlight>
+              </td>
+              <td>
+                <ngb-highlight
+                  [result]="item.precioProducto| number"
+                  [term]="service.searchTerm"
+                ></ngb-highlight>
+              </td>
+              <td>
+                <ngb-highlight
+                  [result]="item.cantidadProducto| number"
+                  [term]="service.searchTerm"
+                ></ngb-highlight>
+              </td>
+              <td>
+                <ngb-highlight 
+                  [result]="item.nombreCategoria"
+                  [term]="service.searchTerm"
+                ></ngb-highlight>
+              </td>
+              <td class="d-flex justify-content-center">
+                <img [src]="convertirBase64AImagen(item.imagenProducto)" class="mr-2" class="imagen-especifica" />
 
-<form>
-  <div class="card border-left-primary shadow h-100 py-2 mt-4 px-4">
-    <div class="card-body row">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th scope="col" sortableProdu="id" (sort)="onSort($event)">Codigo</th>
-            <th scope="col" sortableProdu="nombre" (sort)="onSort($event)">
-              Nombre
-            </th>
-            <th scope="col" sortableProdu="cantidad" (sort)="onSort($event)">
-              Cantidad
-            </th>
-            <th scope="col" sortableProdu="categoria" (sort)="onSort($event)">
-              Categoria
-            </th>
-            <th scope="col" sortableProdu="precio" (sort)="onSort($event)">
-              Precio
-            </th>
-            <th scope="col" sortableProdu="imagen" (sort)="onSort($event)">
-              Imagen
-            </th>
-            <th scope="col" sortableProdu="nombre" (sort)="onSort($event)">
-              Acciones
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let country of countries$ | async">
-            <th scope="row">{{ country.id }}</th>
-            <td>
-              <ngb-highlight [result]="country.nombre" [term]="service.searchTerm"></ngb-highlight>
-            </td>
-            <td>
-              <ngb-highlight [result]="country.cantidad | number" [term]="service.searchTerm"></ngb-highlight>
-            </td>
-            <td>
-              <ngb-highlight [result]="country.categoria" [term]="service.searchTerm"></ngb-highlight>
-            </td>
-            <td>
-              <ngb-highlight [result]="country.precio | number" [term]="service.searchTerm"></ngb-highlight>
-            </td>
-            <td>
-              <img src="{{ country.imagen }}" class="mr-2" class="imagen-especifica" />
-            </td>
-            <td>
-              <button class="btn mx-1" type="button" ngbTooltip="Detalle" data-toggle="modal"
-                data-target="#detalleModal" data-backdrop="false">
-                <span class="icon">
-                  <i class="fas fa-eye"></i>
-                </span>
-              </button>
-              <button class="btn mx-1" type="button" ngbTooltip="Editar" #closebuttonModificar data-toggle="modal"
-                data-target="#editModal">
-                <span class="icon">
-                  <i class="fas fa-edit"></i>
-                </span>
-              </button>
-
-              <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false" ngbTooltip="Estado">
-                <i class="fas fa-power-off"></i>
-              </button>
-              <div class="dropdown-menu">
-                <button class="dropdown-item">
-                  <i class="fas fa-check"></i>
-                  Acivar
+              </td>
+              <td>
+                <ngb-highlight
+                [result]="item.estadoProducto == 'A' ? ('TOOLTIP_ACTIVO' | translate) :('TOOLTIP_INACTIVO' | translate) "
+                [term]="service.searchTerm"
+              ></ngb-highlight>
+                
+              </td>
+              <td>
+                <button (click)="detalleItem(item)" class="btn mx-1" type="button" ngbTooltip="Detalle" data-toggle="modal"
+                  data-target="#detalleModal" data-backdrop="false">
+                  <span class="icon">
+                    <i class="fas fa-eye"></i>
+                  </span>
                 </button>
-                <button class="dropdown-item">
-                  <i class="fas fa-times"></i>
-                  Inactivar
+                <button (click)="resetearFormulario();cargarModificar(item)" class="btn mx-1" type="button" data-backdrop="false" ngbTooltip="Editar" #closebuttonModificar data-toggle="modal"
+                  data-target="#editModal">
+                  <span class="icon">
+                    <i class="fas fa-edit"></i>
+                  </span>
                 </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+  
+                <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+                  aria-expanded="false" ngbTooltip="Estado">
+                  <i class="fas fa-power-off"></i>
+                </button>
+                <div class="dropdown-menu">
+                  <button (click)="cambiarEstado(item)" class="dropdown-item" [disabled]="item.estadoProducto === 'A'">
+                    <i class="fas fa-check"></i>
+                    {{"TOOLTIP_ACTIVO"|translate}}
+                  </button>
+                  <button (click)="cambiarEstado(item)" class="dropdown-item" [disabled]="item.estadoProducto === 'I'">
+                    <i class="fas fa-times"></i>
+                    {{"TOOLTIP_INACTIVO"|translate}}
+                  </button>
+                </div>
+              </td>
+             
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
-
-  <div class="d-flex justify-content-between p-2">
-    <!-- <ngb-pagination
-        [collectionSize]="(total$ | async)!" [(page)]="service.page" [pageSize]="service.pageSize">
-      </ngb-pagination> -->
-
-    <select class="custom-select" style="width: auto" name="pageSize" [(ngModel)]="service.pageSize">
-      <option [ngValue]="2">2 items per page</option>
-      <option [ngValue]="4">4 items per page</option>
-      <option [ngValue]="6">6 items per page</option>
-    </select>
-  </div>
-</form>
-
-<!-- crear Modal -->
+  
+    <div class="d-flex justify-content-between p-2">
+      <ngb-pagination 
+          [collectionSize]="(total$ | async)!" [(page)]="service.page" [pageSize]="service.pageSize">
+        </ngb-pagination>
+  
+      <select
+        class="custom-select"
+        style="width: auto"
+        name="pageSize"
+        [(ngModel)]="service.pageSize"
+      >
+        <option [ngValue]="2">2 items per page</option>
+        <option [ngValue]="4">4 items per page</option>
+        <option [ngValue]="6">6 items per page</option>
+      </select>
+    </div>
+  </form>
+  
+  <!-- crear Modal -->
 <div class="modal fade" id="crearModal" tabindex="-1" role="dialog" aria-labelledby="crearModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="crearModalLabel" style="color: black">
-          {{ "CU_ADMIN_PRODUCTOS.CREAR_PRODUCTO_TITLE" | translate }}
-        </h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span class="icon">
-            <i class="fas fa-times-circle"></i>
-          </span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <!-- Persona Juridica -->
-          <div class="card border-left-primary shadow h-100 py-2">
-            <div class="card-body row">
-              <div class="form-group" style="color: black">
-                <div class="row paddingtop">
-                  <!-- nombre producto -->
-                  <div class="d-flex col-md-12 align-items-center">
-                    <div class="col-md-3 mt-2">
-                      <label>
-                        <h6 class="m-0 font-weight-bold">
-                          {{
-                          "CU_ADMIN_PRODUCTOS.NOMBRE_PRODUCTO" | translate
-                          }}
-                          *
-                        </h6>
-                      </label>
-                    </div>
-                    <div class="col-md-6 mt-2">
-                      <input type="text" class="form-control form-control-user" name="searchTerm" required="true"
-                        [class.is-invalid]="
-                          validarCampoObligatorio('numeroDocumento')
-                        " placeholder="{{
-                          'CU_ADMIN_PRODUCTOS.NOMBRE_PRODUCTO' | translate
-                        }}" />
-                      <small *ngIf="validarCampoObligatorio('numeroDocumento')" class="text-danger">{{
-                        "CAMPO_OBLIGATORIO" | translate }}</small>
-                    </div>
+aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="crearModalLabel" style="color: black">
+        {{ "CU_ADMIN_PRODUCTOS.CREAR_PRODUCTO_TITLE" | translate }}
+      </h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span class="icon">
+          <i class="fas fa-times-circle"></i>
+        </span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="productoForm" (ngSubmit)="guardarProducto()">
+        <!-- Persona Juridica -->
+        <div class="card border-left-primary shadow h-100 py-2">
+          <div class="card-body row">
+            <div class="form-group" style="color: black">
+              <div class="row paddingtop">
+                <!-- nombre producto -->
+                <div class="d-flex col-md-12 align-items-center">
+                  <div class="col-md-3 mt-2">
+                    <label>
+                      <h6 class="m-0 font-weight-bold">
+                        {{
+                        "CU_ADMIN_PRODUCTOS.NOMBRE_PRODUCTO" | translate
+                        }}
+                        *
+                      </h6>
+                    </label>
                   </div>
-                  <!-- categoria -->
-                  <div class="d-flex col-md-12 align-items-center">
-                    <div class="col-md-3 mt-2">
-                      <label>
-                        <h6 class="m-0 font-weight-bold">
-                          {{ "CU_ADMIN_PRODUCTOS.CATEGORIA" | translate }} *
-                        </h6>
-                      </label>
-                    </div>
-                    <div class="col-md-6 mt-2">
-                      <input type="text" class="form-control form-control-user" name="searchTerm" required="true"
-                        [class.is-invalid]="
-                          validarCampoObligatorio('numeroDocumento')
-                        " placeholder="{{
-                          'CU_ADMIN_PRODUCTOS.CATEGORIA' | translate
-                        }}" />
-                      <small *ngIf="validarCampoObligatorio('numeroDocumento')" class="text-danger">{{
-                        "CAMPO_OBLIGATORIO" | translate }}</small>
-                    </div>
+                  <div class="col-md-6 mt-2">
+                    <input type="text" class="form-control form-control-user" formControlName="nombreProducto" name="searchTerm" required="true"
+                      [class.is-invalid]="
+                        validarCampoObligatorio('nombreProducto')
+                      " placeholder="{{
+                        'CU_ADMIN_PRODUCTOS.NOMBRE_PRODUCTO' | translate
+                      }}" />
+                    <small *ngIf="validarCampoObligatorio('nombreProducto')" class="text-danger">{{
+                      "CAMPO_OBLIGATORIO" | translate }}</small>
                   </div>
-                  <!-- cantidad -->
-                  <div class="d-flex col-md-12 align-items-center">
-                    <div class="col-md-3 mt-2">
-                      <label>
-                        <h6 class="m-0 font-weight-bold">
-                          {{ "CU_ADMIN_PRODUCTOS.CANTIDAD" | translate }} *
-                        </h6>
-                      </label>
-                    </div>
-                    <div class="col-md-6 mt-2">
-                      <input type="text" class="form-control form-control-user" name="searchTerm" required="true"
-                        [class.is-invalid]="
-                          validarCampoObligatorio('numeroDocumento')
-                        " placeholder="{{
-                          'CU_ADMIN_PRODUCTOS.CANTIDAD' | translate
-                        }}" />
-                      <small *ngIf="validarCampoObligatorio('numeroDocumento')" class="text-danger">{{
-                        "CAMPO_OBLIGATORIO" | translate }}</small>
-                    </div>
+                </div>
+                 <!-- categoria -->
+                 <div class="d-flex col-md-12">
+                  <div class="col-md-3 mt-2">
+                    <label>
+                      <h6 class="m-0 font-weight-bold">{{'TITULO_CATEGORIA' | translate }} *
+                      </h6>
+                    </label>
                   </div>
-                  <!-- precio -->
-                  <div class="d-flex col-md-12 align-items-center">
-                    <div class="col-md-3 mt-2">
-                      <label>
-                        <h6 class="m-0 font-weight-bold">
-                          {{ "CU_ADMIN_PRODUCTOS.PRECIO" | translate }} *
-                        </h6>
-                      </label>
-                    </div>
-                    <div class="col-md-6 mt-2">
-                      <input type="text" class="form-control form-control-user" name="searchTerm" required="true"
-                        [class.is-invalid]="
-                          validarCampoObligatorio('numeroDocumento')
-                        " placeholder="{{
-                          'CU_ADMIN_PRODUCTOS.PRECIO' | translate
-                        }}" />
-                      <small *ngIf="validarCampoObligatorio('numeroDocumento')" class="text-danger">{{
-                        "CAMPO_OBLIGATORIO" | translate }}</small>
-                    </div>
+                  <div class="col-md-6 mt-2 ">
+                    <select class="form-control " name="miselect"  formControlName="idCategoria"
+                      required 
+                      [class.is-invalid]="validarCampoObligatorio('idDepartamento')">
+                      <option  disabled value="">{{'TITULO_CATEGORIA' | translate }}
+                      </option>
+                      <option  [value]="item.idCategoria" *ngFor="let item of listaCategorias">{{item.nombreCategoria}}
+                      </option>
+                    </select>
+                    <small *ngIf="validarCampoObligatorio('idDepartamento')"
+                      class="text-danger">{{'CAMPO_OBLIGATORIO'
+                      | translate }}</small>
                   </div>
-                  <!-- Imagen -->
-                  <div class="d-flex col-md-12 form-group">
-                    <div class="col-md-3 mt-2">
-                      <label>
-                        <h6 class="m-0 font-weight-bold">
-                          {{ "CU_ADMIN_PRODUCTOS.IMAGEN_PRODUCTO" | translate }}
-                        </h6>
-                      </label>
+                </div>
+                <!-- cantidad -->
+                <div class="d-flex col-md-12 align-items-center">
+                  <div class="col-md-3 mt-2">
+                    <label>
+                      <h6 class="m-0 font-weight-bold">
+                        {{ "CU_ADMIN_PRODUCTOS.CANTIDAD" | translate }} *
+                      </h6>
+                    </label>
+                  </div>
+                  <div class="col-md-6 mt-2">
+                    <input type="number" class="form-control form-control-user" formControlName="cantidadProducto" name="searchTerm" required="true"
+                      [class.is-invalid]="
+                        validarCampoObligatorio('cantidadProducto')
+                      " placeholder="{{
+                        'CU_ADMIN_PRODUCTOS.CANTIDAD' | translate
+                      }}" />
+                    <small *ngIf="validarCampoObligatorio('cantidadProducto')" class="text-danger">{{
+                      "CAMPO_OBLIGATORIO" | translate }}</small>
+                  </div>
+                </div>
+                <!-- precio -->
+                <div class="d-flex col-md-12 align-items-center">
+                  <div class="col-md-3 mt-2">
+                    <label>
+                      <h6 class="m-0 font-weight-bold">
+                        {{ "CU_ADMIN_PRODUCTOS.PRECIO" | translate }} *
+                      </h6>
+                    </label>
+                  </div>
+                  <div class="col-md-6 mt-2">
+                    <input type="number" class="form-control form-control-user"  formControlName="precioProducto"  name="searchTerm" required="true"
+                      [class.is-invalid]="
+                        validarCampoObligatorio('precioProducto')
+                      " placeholder="{{
+                        'CU_ADMIN_PRODUCTOS.PRECIO' | translate
+                      }}" />
+                    <small *ngIf="validarCampoObligatorio('precioProducto')" class="text-danger">{{
+                      "CAMPO_OBLIGATORIO" | translate }}</small>
+                  </div>
+                </div>
+                <!-- Imagen -->
+                <div class="d-flex col-md-12 form-group">
+                  <div class="col-md-3 mt-2">
+                    <label>
+                      <h6 class="m-0 font-weight-bold">{{'TITULO_IMAGEN' |
+                        translate }}</h6>
+                    </label>
+                  </div>
+                  <div class="col-md-6 mt-2 d-flex ">
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input" id="customFile" accept="image/*"
+                        (change)="imagenSeleccionada  ($event)">
+                      <label class="custom-file-label" for="customFile">{{ selectedFileName }}</label>
+
                     </div>
-                    <div class="col-md-6 mt-2 d-flex">
-                      <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="customFile" accept="image/*" />
-                        <label class="custom-file-label" for="customFile"></label>
-                      </div>
-                      <div class="input-group-append ml-md-2">
-                        <button class="btn btn-outline-danger" type="button">
-                          {{ "BOTON_ELIMINAR" | translate }}
-                        </button>
-                      </div>
+                    <div class="input-group-append ml-md-2" (click)="eliminarImagenSeleccionada()">
+                      <button class="btn btn-outline-danger" type="button"
+                        [disabled]="!selectedFileName">{{'BOTON_ELIMINAR' |
+                        translate }}</button>
                     </div>
+
+
+
                   </div>
 
-                  <!-- Botones -->
-                  <div class="col-md-12 mt-4">
-                    <div class="d-flex justify-content-between">
-                      <div class="ml-auto px-2 d-flex justify-content-between">
-                        <button class="btn btn-secondary btn-icon-split mr-2" type="submit" id="closeModal">
-                          <span class="icon text-white-50">
-                            <i class="fas fa-save"></i>
-                          </span>
-                          <span class="text">{{
-                            "BOTON_CREAR" | translate
-                            }}</span>
-                        </button>
-                        <button class="btn btn-danger btn-icon-split" type="button" data-dismiss="modal"
-                          aria-label="Close">
-                          <span class="icon text-white-50">
-                            <i class="fas fa-times"></i>
-                          </span>
-                          <span class="text">{{
-                            "BOTON_CANCELAR" | translate
-                            }}</span>
-                        </button>
-                      </div>
+                </div>
+
+                <!-- Botones -->
+                <div class="col-md-12 mt-4">
+                  <div class="d-flex justify-content-between">
+                    <div class="ml-auto px-2 d-flex justify-content-between">
+                      <button class="btn btn-secondary btn-icon-split mr-2" type="submit" id="closeModal">
+                        <span class="icon text-white-50">
+                          <i class="fas fa-save"></i>
+                        </span>
+                        <span class="text">{{
+                          "BOTON_CREAR" | translate
+                          }}</span>
+                      </button>
+                      <button class="btn btn-danger btn-icon-split" type="button" data-dismiss="modal"
+                        aria-label="Close">
+                        <span class="icon text-white-50">
+                          <i class="fas fa-times"></i>
+                        </span>
+                        <span class="text">{{
+                          "BOTON_CANCELAR" | translate
+                          }}</span>
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   </div>
 </div>
+</div>
 
-<!--  Detalle modal -->
-<div class="modal fade" id="detalleModal" tabindex="-1" role="dialog" aria-labelledby="detalleModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="detalleModalLabel" style="color: black">
-          {{ "CU_ADMIN_COLOCADORES.DETALLE_COLOCADOR" | translate }}
-        </h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span class="icon">
-            <i class="fas fa-times-circle"></i>
-          </span>
-        </button>
+  
+      <!--  Detalle modal -->
+      <div  class="modal fade" id="detalleModal" tabindex="-1" role="dialog" aria-labelledby="detalleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-content ">
+          <div class="modal-header">
+            <h5 class="modal-title" id="detalleModalLabel" style="color: black;">
+              {{ 'CU_ADMIN_CATEGORIAS.DETALLE_CATEGORIA' | translate }}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span class="icon">
+                <i class="fas fa-times-circle"></i>
+              </span>
+            </button>
+          </div>
+          <div class="modal-body">
+     
+            <form *ngIf="mostarDetalleModal">
+              <div class="grid justify-content-center col-md-12 gap-5">
+                
+                <!-- Persona -->
+     
+                <div class=" card border-left-primary shadow h-100 py-2 g-col-6 p-2">
+                  <div class="card-body row">
+     
+                    <div class="form-group" style="color: black;">
+     
+                      <div class="row paddingtop">
+                         <!-- imagen -->
+                         <div class="d-flex col-md-12  ">
+                          
+                          <div class="col-md-12 mb-3 ">
+                            <div class="shadow-lg col-md-3 d-flex justify-content-center py-2 rounded">
+                              <img [src]="convertirBase64AImagen(this.detallesProducto.imagenProducto)"  class="imagen-detalles" />
+
+                            </div>
+
+                          </div>
+                        </div>
+     
+                        <!-- Nombre -->
+                        <div class="d-flex col-md-12 ">
+                          <div class="col-md-6">
+                            <label>
+                              <h6 class="m-0 font-weight-bold">{{'CU_ADMIN_PROVEEDOR.NOMBRE_PROVEEDOR' | translate
+                                }}</h6>
+                            </label>
+                          </div>
+                          <div class="col-md-6">
+                            <label>{{this.detallesProducto.nombreProducto}}</label>
+                          </div>
+                        </div>
+                          <!-- Cantidad -->
+                          <div class="d-flex col-md-12 ">
+                            <div class="col-md-6">
+                              <label>
+                                <h6 class="m-0 font-weight-bold">{{'TITULO_CANTIDAD' | translate
+                                  }}</h6>
+                              </label>
+                            </div>
+                            <div class="col-md-6">
+                              <label>{{this.detallesProducto.cantidadProducto}}</label>
+                            </div>
+                          </div>
+                            <!-- PRECIO -->
+                        <div class="d-flex col-md-12 ">
+                          <div class="col-md-6">
+                            <label>
+                              <h6 class="m-0 font-weight-bold">{{'TITULO_PRECIO' | translate
+                                }}</h6>
+                            </label>
+                          </div>
+                          <div class="col-md-6">
+                            <label>{{this.detallesProducto.precioProducto}}</label>
+                          </div>
+                        </div>
+                          <!-- CATEGORIA -->
+                          <div class="d-flex col-md-12 ">
+                            <div class="col-md-6">
+                              <label>
+                                <h6 class="m-0 font-weight-bold">{{'TITULO_CATEGORIA' | translate
+                                  }}</h6>
+                              </label>
+                            </div>
+                            <div class="col-md-6">
+                              <label>{{this.detallesProducto.nombreCategoria}}</label>
+                            </div>
+                          </div>
+                         
+                        <!-- Estado -->
+                        <div class="d-flex col-md-12 ">
+                          <div class="col-md-6">
+                            <label>
+                              <h6 class="m-0 font-weight-bold">{{'TITULO_ESTADO' | translate
+                                }}</h6>
+                            </label>
+                          </div>
+                          <div class="col-md-6">
+                            <label>{{this.detallesProducto.estado=='A' ? ('TOOLTIP_ACTIVO' | translate) :('TOOLTIP_INACTIVO' | translate) }}</label>
+                          </div>
+                        </div>
+     
+                        
+     
+                      </div>
+     
+                    </div>
+     
+                  </div>
+     
+                </div>
+     
+              </div>
+     
+            </form>
+     
+          </div>
+        </div>
       </div>
-      <div class="modal-body">
-        <form>
-          <div class="grid justify-content-center col-md-12 gap-5">
-            <!-- Colocador -->
-            <h6 class="m-0 font-weight-bold my-3">
-              {{
-              "CU_ADMIN_COLOCADORES.TITULO_INFROMACION_COLOCADOR_DETALLES"
-              | translate
-              }}
-            </h6>
-            <div class="card border-left-primary shadow h-100 py-2 g-col-6 p-2">
-              <div class="card-body row">
-                <div class="form-group col-md-12" style="color: black">
-                  <div class="row paddingtop">
-                    <!-- Raxon social -->
-                    <div class="d-flex col-md-12">
-                      <div class="col-md-6">
-                        <label>
-                          <h6 class="m-0 font-weight-bold">
-                            {{
-                            "CU_ADMIN_COLOCADORES.LISTA_RAZON_SOCIAL"
-                            | translate
-                            }}
-                          </h6>
-                        </label>
-                      </div>
-                      <div class="col-md-6">
-                        <label>prueba</label>
-                      </div>
-                    </div>
-                    <!-- Nombre punto de venta  -->
-                    <div class="d-flex col-md-12">
-                      <div class="col-md-6">
-                        <label>
-                          <h6 class="m-0 font-weight-bold">
-                            {{
-                            "CU_ADMIN_COLOCADORES.LISTA_PUNTO_DE_VENTA"
-                            | translate
-                            }}
-                          </h6>
-                        </label>
-                      </div>
-                      <div class="col-md-6">
-                        <label>prueba</label>
-                      </div>
-                    </div>
-                    <!-- Estado Colocador -->
-                    <div class="d-flex col-md-12">
-                      <div class="col-md-6">
-                        <label>
-                          <h6 class="m-0 font-weight-bold">
-                            {{ "ESTADO" | translate }}
-                          </h6>
-                        </label>
-                      </div>
-                      <div class="col-md-6">
-                        <label>prueba</label>
-                      </div>
-                    </div>
+     </div>
+
+       <!-- editar Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="crearModalLabel" style="color: black">
+        {{ "CU_ADMIN_PRODUCTOS.CREAR_PRODUCTO_TITLE" | translate }}
+      </h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span class="icon">
+          <i class="fas fa-times-circle"></i>
+        </span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="productoForm" (ngSubmit)="editarProducto()">
+        <!-- Persona Juridica -->
+        <div class="card border-left-primary shadow h-100 py-2">
+          <div class="card-body row">
+            <div class="form-group" style="color: black">
+              <div class="row paddingtop">
+                <!-- nombre producto -->
+                <div class="d-flex col-md-12 align-items-center">
+                  <div class="col-md-3 mt-2">
+                    <label>
+                      <h6 class="m-0 font-weight-bold">
+                        {{
+                        "CU_ADMIN_PRODUCTOS.NOMBRE_PRODUCTO" | translate
+                        }}
+                        *
+                      </h6>
+                    </label>
+                  </div>
+                  <div class="col-md-6 mt-2">
+                    <input type="text" class="form-control form-control-user" formControlName="nombreProducto" name="searchTerm" required="true"
+                      [class.is-invalid]="
+                        validarCampoObligatorio('nombreProducto')
+                      " placeholder="{{
+                        'CU_ADMIN_PRODUCTOS.NOMBRE_PRODUCTO' | translate
+                      }}" />
+                    <small *ngIf="validarCampoObligatorio('nombreProducto')" class="text-danger">{{
+                      "CAMPO_OBLIGATORIO" | translate }}</small>
                   </div>
                 </div>
-              </div>
-            </div>
-            <!-- Persona -->
-            <h6 class="m-0 font-weight-bold my-3">
-              {{
-              "CU_ADMIN_COLOCADORES.TITULO_INFROMACION_CONTACTO_DETALLES"
-              | translate
-              }}
-            </h6>
-
-            <div class="card border-left-primary shadow h-100 py-2 g-col-6 p-2">
-              <div class="card-body row">
-                <div class="form-group" style="color: black">
-                  <div class="row paddingtop">
-                    <!-- Tipo de documento -->
-                    <div class="d-flex col-md-12">
-                      <div class="col-md-6">
-                        <label>
-                          <h6 class="m-0 font-weight-bold">
-                            {{ "LISTA_TIPO_DOCUMENTO" | translate }}
-                          </h6>
-                        </label>
-                      </div>
-                      <div class="col-md-6">
-                        <label>prueba</label>
-                      </div>
+                 <!-- categoria -->
+                 <div class="d-flex col-md-12">
+                  <div class="col-md-3 mt-2">
+                    <label>
+                      <h6 class="m-0 font-weight-bold">{{'TITULO_CATEGORIA' | translate }} *
+                      </h6>
+                    </label>
+                  </div>
+                  <div class="col-md-6 mt-2 ">
+                    <select class="form-control " name="miselect"  formControlName="idCategoria"
+                      required 
+                      [class.is-invalid]="validarCampoObligatorio('idDepartamento')">
+                      <option  disabled value="">{{'TITULO_CATEGORIA' | translate }}
+                      </option>
+                      <option  [value]="item.idCategoria" *ngFor="let item of listaCategorias">{{item.nombreCategoria}}
+                      </option>
+                    </select>
+                    <small *ngIf="validarCampoObligatorio('idDepartamento')"
+                      class="text-danger">{{'CAMPO_OBLIGATORIO'
+                      | translate }}</small>
+                  </div>
+                </div>
+                <!-- cantidad -->
+                <div class="d-flex col-md-12 align-items-center">
+                  <div class="col-md-3 mt-2">
+                    <label>
+                      <h6 class="m-0 font-weight-bold">
+                        {{ "CU_ADMIN_PRODUCTOS.CANTIDAD" | translate }} *
+                      </h6>
+                    </label>
+                  </div>
+                  <div class="col-md-6 mt-2">
+                    <input type="number" class="form-control form-control-user" formControlName="cantidadProducto" name="searchTerm" required="true"
+                      [class.is-invalid]="
+                        validarCampoObligatorio('cantidadProducto')
+                      " placeholder="{{
+                        'CU_ADMIN_PRODUCTOS.CANTIDAD' | translate
+                      }}" />
+                    <small *ngIf="validarCampoObligatorio('cantidadProducto')" class="text-danger">{{
+                      "CAMPO_OBLIGATORIO" | translate }}</small>
+                  </div>
+                </div>
+                <!-- precio -->
+                <div class="d-flex col-md-12 align-items-center">
+                  <div class="col-md-3 mt-2">
+                    <label>
+                      <h6 class="m-0 font-weight-bold">
+                        {{ "CU_ADMIN_PRODUCTOS.PRECIO" | translate }} *
+                      </h6>
+                    </label>
+                  </div>
+                  <div class="col-md-6 mt-2">
+                    <input type="number" class="form-control form-control-user"  formControlName="precioProducto"  name="searchTerm" required="true"
+                      [class.is-invalid]="
+                        validarCampoObligatorio('precioProducto')
+                      " placeholder="{{
+                        'CU_ADMIN_PRODUCTOS.PRECIO' | translate
+                      }}" />
+                    <small *ngIf="validarCampoObligatorio('precioProducto')" class="text-danger">{{
+                      "CAMPO_OBLIGATORIO" | translate }}</small>
+                  </div>
+                </div>
+                <!-- Imagen -->
+                <div class="d-flex col-md-12 form-group">
+                  <div class="col-md-3 mt-2">
+                    <label>
+                      <h6 class="m-0 font-weight-bold">{{'TITULO_IMAGEN' |
+                        translate }}</h6>
+                    </label>
+                  </div>
+                  <div class="col-md-6 mt-2 d-flex ">
+                    <div class="custom-file">
+                      <input type="file" class="custom-file-input" id="customFile" accept="image/*"
+                             (change)="eliminarImagenSeleccionada();imagenSeleccionada($event)">
+                      <label class="custom-file-label" for="customFile">{{ selectedFileName }}</label>
+                    </div>
+                    <div class="input-group-append ml-md-2"
+                      (click)="eliminarImagenSeleccionada();this.detallesProducto.imagenProducto=null ">
+                      <button class="btn btn-outline-danger" type="button"
+                        [disabled]="!selectedFileName">{{'BOTON_ELIMINAR' |
+                        translate }}</button>
                     </div>
 
-                    <!-- Numero documento -->
-                    <div class="d-flex col-md-12">
-                      <div class="col-md-6">
-                        <label>
-                          <h6 class="m-0 font-weight-bold">
-                            {{ "INPUT_NUMERO_DOCUMENTO" | translate }}
-                          </h6>
-                        </label>
-                      </div>
-                      <div class="col-md-6">
-                        <label>prueba</label>
-                      </div>
-                    </div>
-                    <!-- Codigo colocador -->
-                    <div class="d-flex col-md-12">
-                      <div class="col-md-6">
-                        <label>
-                          <h6 class="m-0 font-weight-bold">
-                            {{
-                            "CU_ADMIN_COLOCADORES.LABEL_CODIGO_COLOCADOR"
-                            | translate
-                            }}
-                          </h6>
-                        </label>
-                      </div>
-                      <div class="col-md-6">
-                        <label>prueba</label>
-                      </div>
-                    </div>
 
-                    <!-- Correo -->
-                    <div class="d-flex col-md-12">
-                      <div class="col-md-6">
-                        <label>
-                          <h6 class="m-0 font-weight-bold">
-                            {{ "INPUT_CORREO" | translate }}
-                          </h6>
-                        </label>
-                      </div>
-                      <div class="col-md-6">
-                        <label>prueba</label>
-                      </div>
+
+                  </div>
+
+                </div>
+
+
+                <!-- Botones -->
+                <div class="col-md-12 mt-4">
+                  <div class="d-flex justify-content-between">
+                    <div class="ml-auto px-2 d-flex justify-content-between">
+                      <button class="btn btn-secondary btn-icon-split mr-2" type="submit" id="closeModal">
+                        <span class="icon text-white-50">
+                          <i class="fas fa-save"></i>
+                        </span>
+                        <span class="text">{{
+                          "BOTON_CREAR" | translate
+                          }}</span>
+                      </button>
+                      <button class="btn btn-danger btn-icon-split" type="button" data-dismiss="modal"
+                        aria-label="Close">
+                        <span class="icon text-white-50">
+                          <i class="fas fa-times"></i>
+                        </span>
+                        <span class="text">{{
+                          "BOTON_CANCELAR" | translate
+                          }}</span>
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   </div>
+</div>
 </div>
