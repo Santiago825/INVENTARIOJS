@@ -1,6 +1,7 @@
 import {Injectable, PipeTransform} from '@angular/core';
 
 import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
+import { CONSTANTES } from 'src/app/constants/INVETARIOJS.constants';
 
 import {DecimalPipe} from '@angular/common';
 import {debounceTime, delay, switchMap, tap} from 'rxjs/operators';
@@ -78,20 +79,29 @@ export class CategoriaSortService {
     this.obtenerCategorias()
   }
 
+ 
   obtenerCategorias() {
     this.spinner.show();
-    this.categoriasService.obtenerCategorias().subscribe(
-      (response: any) => {
+      this.categoriasService.obtenerCategorias( ).subscribe({
+      next: (response:any) => {
+        if ( response[CONSTANTES.CODIGO_RESPUESTA] && response[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK ) {
+        
         this.listaCategorias = response['lista'];
-        console.log(this.listaCategorias);
-        this.spinner.hide();
+        
+      
+        }
       },
-      (error: any) => {
+    
+      error: (err: any) => {
+      },
+    
+      complete: () => {
         this.spinner.hide();
-       
+      }
       }
     );
-  }
+    
+    }
 
   get countries$() { return this._countries$.asObservable(); }
   get total$() { return this._total$.asObservable(); }

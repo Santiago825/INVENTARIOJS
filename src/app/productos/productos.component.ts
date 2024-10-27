@@ -1,8 +1,14 @@
 import { DecimalPipe } from '@angular/common';
-import { Component, QueryList, ViewChildren, OnInit,ViewChild } from '@angular/core';
+import {
+  Component,
+  QueryList,
+  ViewChildren,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import { PRODUCTO,Producto } from '../model/productos';
+import { PRODUCTO, Producto } from '../model/productos';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   NgbdSortableHeaderProducto,
@@ -13,32 +19,32 @@ import { ProdcutosSortService } from 'src/app/services/sort/productos/prodcutos-
 import { ProductosService } from 'src/app/services/negocio/productos/productos.service';
 import { CategoriasService } from 'src/app/services/negocio/categorias/categorias.service';
 
-import { NgxSpinnerService } from "ngx-spinner";
+import { NgxSpinnerService } from 'ngx-spinner';
 import Swal from 'sweetalert2';
 import { Categorias } from '../model/categorias';
-
+import { CONSTANTES } from 'src/app/constants/INVETARIOJS.constants';
 
 @Component({
   selector: 'app-productos',
   templateUrl: './productos.component.html',
   styleUrls: ['./productos.component.css'],
-  providers: [ProdcutosSortService, DecimalPipe]
+  providers: [ProdcutosSortService, DecimalPipe],
 })
 export class ProductosComponent implements OnInit {
-	countries$: Observable<Producto[]>;
+  countries$: Observable<Producto[]>;
   total$: Observable<number>;
   productoForm: FormGroup;
-  categoriaVacio:FormGroup;
-  listaProductos:Producto[]=[];
-  listaCategorias:Categorias[]=[];
+  categoriaVacio: FormGroup;
+  listaProductos: Producto[] = [];
+  listaCategorias: Categorias[] = [];
   detallesProducto: any;
-  mostarDetalleModal=false;
+  mostarDetalleModal = false;
   imageUrl: string | null = null;
-  imagenBase64:any="";
-  selectedFileName: string = "Seleccione imagen";
+  imagenBase64: any = '';
+  selectedFileName: string = 'Seleccione imagen';
 
-  @ViewChild('closebuttonCrear') closebuttonCrear:any;
-  @ViewChild('closebuttonModificar') closebuttonModificar:any;
+  @ViewChild('closebuttonCrear') closebuttonCrear: any;
+  @ViewChild('closebuttonModificar') closebuttonModificar: any;
 
   @ViewChildren(NgbdSortableHeaderProducto)
   headers!: QueryList<NgbdSortableHeaderProducto>;
@@ -47,23 +53,18 @@ export class ProductosComponent implements OnInit {
   constructor(
     public service: ProdcutosSortService,
     public translate: TranslateService,
-	public fb: FormBuilder,
-	public serviceGenerico: GenericoService,
-    public productosService:ProductosService,
-    public  categoriasService:CategoriasService,
+    public fb: FormBuilder,
+    public serviceGenerico: GenericoService,
+    public productosService: ProductosService,
+    public categoriasService: CategoriasService,
     private spinner: NgxSpinnerService
-
-
   ) {
-    
     this.countries$ = service.countries$;
     this.total$ = service.total$;
     this.translate.use('es');
-	  this.productoForm = this.fb.group(PRODUCTO);
-    this.categoriaVacio= this.fb.group(PRODUCTO);
+    this.productoForm = this.fb.group(PRODUCTO);
+    this.categoriaVacio = this.fb.group(PRODUCTO);
     this.obtenerCategorias();
- 
-
   }
 
   ngOnInit(): void {}
@@ -80,8 +81,10 @@ export class ProductosComponent implements OnInit {
   }
 
   validarCampoObligatorio(campo: string): boolean {
-	return !!(this.productoForm.get(campo)?.invalid ?? false) && 
-		   !!(this.productoForm.get(campo)?.touched ?? false);
+    return (
+      !!(this.productoForm.get(campo)?.invalid ?? false) &&
+      !!(this.productoForm.get(campo)?.touched ?? false)
+    );
   }
   convertirBase64AImagen(base64: string): string {
     // Remueve espacios en blanco
@@ -115,7 +118,7 @@ export class ProductosComponent implements OnInit {
 
   imagenSeleccionada(event: any) {
     const file: File = event.target.files[0];
-    
+
     if (file && file.type.startsWith('image/')) {
       this.selectedFileName = file.name;
 
@@ -124,18 +127,21 @@ export class ProductosComponent implements OnInit {
         this.imagenBase64 = reader.result as string;
       };
       reader.readAsDataURL(file);
-    }
-    else{
-      this.serviceGenerico.alertaMensajeInformacion(this.serviceGenerico.traduccionMensajeGenerico("CU_ADMIN_ALIADOS.MENSAJE_SOLO_IMAGENES"))
+    } else {
+      this.serviceGenerico.alertaMensajeInformacion(
+        this.serviceGenerico.traduccionMensajeGenerico(
+          'CU_ADMIN_ALIADOS.MENSAJE_SOLO_IMAGENES'
+        )
+      );
       this.eliminarImagenSeleccionada();
     }
     console.log(this.imagenBase64);
   }
-  eliminarImagenSeleccionada(){
-    this.selectedFileName = this.serviceGenerico.traduccionMensajeGenerico("PLACEHOLDER_IMAGEN");
-    this.imagenBase64=null;
+  eliminarImagenSeleccionada() {
+    this.selectedFileName =
+      this.serviceGenerico.traduccionMensajeGenerico('PLACEHOLDER_IMAGEN');
+    this.imagenBase64 = null;
   }
-
 
   guardarProducto() {
     if (this.productoForm.invalid) {
@@ -146,16 +152,20 @@ export class ProductosComponent implements OnInit {
     }
     console.log(this.productoForm);
 
-
     if (this.productoForm.valid) {
       Swal.fire({
-        title: this.serviceGenerico.traduccionMensajeGenerico('TITULO_CONFIRMAR'),
-        text: this.serviceGenerico.traduccionMensajeGenerico("TEXTO_CONFIRMACION_CREAR_ALIADO"),
+        title:
+          this.serviceGenerico.traduccionMensajeGenerico('TITULO_CONFIRMAR'),
+        text: this.serviceGenerico.traduccionMensajeGenerico(
+          'TEXTO_CONFIRMACION_CREAR_PRODUCTO'
+        ),
         showCancelButton: true,
-        confirmButtonColor: "blue",
-        cancelButtonColor: "blue",
-        cancelButtonText: this.serviceGenerico.traduccionMensajeGenerico('BOTON_CANCELAR'),
-        confirmButtonText: this.serviceGenerico.traduccionMensajeGenerico('BOTON_CONFIRMAR'),
+        confirmButtonColor: CONSTANTES.COLOR_BOTON_CONFIRMAR,
+        cancelButtonColor: CONSTANTES.COLOR_BOTON_CANCELAR,
+        cancelButtonText:
+          this.serviceGenerico.traduccionMensajeGenerico('BOTON_CANCELAR'),
+        confirmButtonText:
+          this.serviceGenerico.traduccionMensajeGenerico('BOTON_CONFIRMAR'),
         showClass: {
           popup: 'animate__animated animate__fadeInDown',
         },
@@ -166,124 +176,49 @@ export class ProductosComponent implements OnInit {
         if (result.value) {
           this.spinner.show();
           this.productoForm.patchValue({
-            imagenProducto: this.imagenBase64
-          })
-          this.productosService.crearProducto(this.productoForm.value).subscribe({
-            next: (resp) => {
-
-              // if (
-              //   resp[CONSTANTES.CODIGO_RESPUESTA] &&
-              //   resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
-              // ) {
-                this.productoForm.reset();
-                // this.serviceGenerico.alertaMensajeInformacion(
-                //   resp[CONSTANTES.MENSAJE_RESPUESTA]
-                // );
-
-                this.closebuttonCrear.nativeElement.click();
-                this.recargarLista();
-              // } else {
-              //   this.serviceGenerico.alertaMensajeInformacion(
-              //     resp[CONSTANTES.MENSAJE_RESPUESTA]
-              //   );
-              // }
-            },
-            error: (err: any) => {
-              console.error(err);
-            },
-
-            complete: () => {
-              this.spinner.hide();
-            },
+            imagenProducto: this.imagenBase64,
           });
+          this.productosService
+            .crearProducto(this.productoForm.value)
+            .subscribe({
+              next: (resp: any) => {
+                if (
+                  resp[CONSTANTES.CODIGO_RESPUESTA] &&
+                  resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
+                ) {
+                  this.productoForm.reset();
+                  this.serviceGenerico.alertaMensajeInformacion(
+                    resp[CONSTANTES.MENSAJE_RESPUESTA]
+                  );
+
+                  this.closebuttonCrear.nativeElement.click();
+                  this.recargarLista();
+                } else {
+                  this.serviceGenerico.alertaMensajeInformacion(
+                    resp[CONSTANTES.MENSAJE_RESPUESTA]
+                  );
+                }
+              },
+              error: (err: any) => {
+                console.error(err);
+              },
+
+              complete: () => {
+                this.spinner.hide();
+              },
+            });
         }
       });
     } else {
       this.spinner.hide();
       this.serviceGenerico.alertaMensajeInformacion(
-        this.serviceGenerico.traduccionMensajeGenerico('MENSAJE_RELLENE_TODOS_LOS_CAMPOS')
+        this.serviceGenerico.traduccionMensajeGenerico(
+          'MENSAJE_RELLENE_TODOS_LOS_CAMPOS'
+        )
       );
     }
   }
-  editarCategoria(){
-		if (this.productoForm.invalid) {
-      Object.values(this.productoForm.controls).forEach((control) => {
-        control.markAsTouched();
-      });
-      return;
-      }
-      if(this.productoForm.valid){
-        
-        Swal.fire({
-          title: this.serviceGenerico.traduccionMensajeGenerico('TITULO_CONFIRMAR'),
-          text: this.serviceGenerico.traduccionMensajeGenerico(
-            'TEXTO_CONFIRMACION_CREAR_CATEGORIA'
-          ),
-          showCancelButton: true,
-          confirmButtonColor: "blue",
-          cancelButtonColor: "bluea",
-          cancelButtonText: this.serviceGenerico.traduccionMensajeGenerico('BOTON_CANCELAR'),
-          confirmButtonText: this.serviceGenerico.traduccionMensajeGenerico('BOTON_CONFIRMAR'),
-          showClass: {
-            popup: 'animate__animated animate__fadeInDown',
-          },
-          hideClass: {
-            popup: 'animate__animated animate__fadeOutUp',
-          },
-        }).then((result) => {
-          if (result.value) {
-            this.spinner.show();
-            this.productosService
-              .modificarProducto(this.productoForm.value)
-              .subscribe({
-                next: (resp) => {
   
-                  this.spinner.hide();
-                  this.closebuttonModificar.nativeElement.click();
-                  this.recargarLista();
-                  // if (
-                  //   resp[CONSTANTES.CODIGO_RESPUESTA] &&
-                  //   resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
-                  // ) {
-                  //   this.productoForm.reset();
-                  //   this.serviceGenerico.alertaMensajeInformacion(
-                  //     resp[CONSTANTES.MENSAJE_RESPUESTA]
-                  //   );
-                  //   this.spinner.hide();
-                  //   this.closebuttonCrear.nativeElement.click();
-                  //   this.recargarLista();
-                  // } else if (
-                  //   resp[CONSTANTES.CODIGO_RESPUESTA] &&
-                  //   (resp[CONSTANTES.CODIGO_RESPUESTA] ===
-                  //     CONSTANTES.CORREO_EXISTE ||
-                  //     resp[CONSTANTES.CODIGO_RESPUESTA] ===
-                  //       CONSTANTES.DOCUMENTO_EXISTE)
-                  // ) {
-                  //   this.serviceGenerico.alertaMensajeInformacion(
-                  //     resp[CONSTANTES.MENSAJE_RESPUESTA]
-                  //   );
-                  //   this.spinner.hide();
-                  // }
-                },
-                error: (err: any) => {
-                  console.error('err', err);
-                },
-  
-                complete: () => {
-                  this.spinner.hide();
-                },
-              });
-          } else {
-          }
-        });
-  
-      }else {
-      this.serviceGenerico.alertaMensajeInformacion(
-        this.serviceGenerico.traduccionMensajeGenerico('MENSAJE_RELLENE_TODOS_LOS_CAMPOS')
-      );
-      }
-	  
-  }
   editarProducto() {
     if (this.productoForm.invalid) {
       Object.values(this.productoForm.controls).forEach((control) => {
@@ -295,13 +230,18 @@ export class ProductosComponent implements OnInit {
 
     if (this.productoForm.valid) {
       Swal.fire({
-        title: this.serviceGenerico.traduccionMensajeGenerico('TITULO_CONFIRMAR'),
-        text: this.serviceGenerico.traduccionMensajeGenerico('TEXTO_CONFIRMACION'),
+        title:
+          this.serviceGenerico.traduccionMensajeGenerico('TITULO_CONFIRMAR'),
+        text: this.serviceGenerico.traduccionMensajeGenerico(
+          'TEXTO_CONFIRMACION'
+        ),
         showCancelButton: true,
-        confirmButtonColor: "blue",
-        cancelButtonColor: "blue",
-        cancelButtonText: this.serviceGenerico.traduccionMensajeGenerico('BOTON_CANCELAR'),
-        confirmButtonText: this.serviceGenerico.traduccionMensajeGenerico('BOTON_CONFIRMAR'),
+        confirmButtonColor: CONSTANTES.COLOR_BOTON_CONFIRMAR,
+        cancelButtonColor: CONSTANTES.COLOR_BOTON_CANCELAR,
+        cancelButtonText:
+          this.serviceGenerico.traduccionMensajeGenerico('BOTON_CANCELAR'),
+        confirmButtonText:
+          this.serviceGenerico.traduccionMensajeGenerico('BOTON_CONFIRMAR'),
         showClass: {
           popup: 'animate__animated animate__fadeInDown',
         },
@@ -312,59 +252,67 @@ export class ProductosComponent implements OnInit {
         if (result.value) {
           this.spinner.show();
           this.productoForm.patchValue({
-            imagen: this.imagenBase64 
-          })
-          this.productosService.modificarProducto(this.productoForm.value).subscribe({
-            next: (resp) => {
-              // if (
-              //   resp[CONSTANTES.CODIGO_RESPUESTA] &&
-              //   resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
-              // ) {
-              //   this.serviceGenerico.alertaMensajeInformacion(
-              //     resp[CONSTANTES.MENSAJE_RESPUESTA]
-              //   );
+            imagen: this.imagenBase64,
+          });
+          console.log(this.productoForm.value);
+          this.productosService
+            .modificarProducto(this.productoForm.value)
+            .subscribe({
+              next: (resp:any) => {
+                if (
+                  resp[CONSTANTES.CODIGO_RESPUESTA] &&
+                  resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
+                ) {
+                  this.serviceGenerico.alertaMensajeInformacion(
+                    resp[CONSTANTES.MENSAJE_RESPUESTA]
+                  );
 
                 this.recargarLista();
                 this.productoForm.reset();
                 this.closebuttonModificar.nativeElement.click();
-              // } else {
-              //   this.serviceGenerico.alertaMensajeInformacion(
-              //     resp[CONSTANTES.MENSAJE_RESPUESTA]
-              //   );
-              //}
-            },
+                } else {
+                  this.serviceGenerico.alertaMensajeInformacion(
+                    resp[CONSTANTES.MENSAJE_RESPUESTA]
+                  );
+                }
+              },
 
-            error: (err: any) => {},
+              error: (err: any) => {},
 
-            complete: () => {
-              this.spinner.hide();
-            },
-          });
+              complete: () => {
+                this.spinner.hide();
+              },
+            });
         }
       });
     } else {
       this.serviceGenerico.alertaMensajeInformacion(
-        this.serviceGenerico.traduccionMensajeGenerico('MENSAJE_RELLENE_TODOS_LOS_CAMPOS')
+        this.serviceGenerico.traduccionMensajeGenerico(
+          'MENSAJE_RELLENE_TODOS_LOS_CAMPOS'
+        )
       );
 
       this.spinner.hide();
     }
   }
 
-  resetearFormulario(){
+  resetearFormulario() {
     this.productoForm.reset();
     this.productoForm.patchValue(this.categoriaVacio.value);
+    this.selectedFileName=this.serviceGenerico.traduccionMensajeGenerico('PLACEHOLDER_IMAGEN');
+    this.imagenBase64='';
   }
-   recargarLista(){
+  recargarLista() {
     this.service.obtenerCategorias();
     this.service.searchTerm = '';
+  
   }
 
-    detalleItem(item:Producto){
-      this.mostarDetalleModal = true;
+  detalleItem(item: Producto) {
+    this.mostarDetalleModal = true;
     // Inicializar detallesCategoria si no está inicializado aún
     if (!this.detallesProducto) {
-        this.detallesProducto = { nombreCategoria: '', estadoCategoria: '' };
+      this.detallesProducto = { nombreCategoria: '', estadoCategoria: '' };
     }
     this.detallesProducto.nombreProducto = item.nombreProducto;
     this.detallesProducto.cantidadProducto = item.cantidadProducto;
@@ -374,8 +322,8 @@ export class ProductosComponent implements OnInit {
     this.detallesProducto.estadoProducto = item.estadoProducto;
   }
 
-  cargarModificar(item:Producto){
-    this.mostarDetalleModal=false;
+  cargarModificar(item: Producto) {
+    this.mostarDetalleModal = false;
     this.productoForm.patchValue({
       idProducto: item.idProducto,
       nombreProducto: item.nombreProducto,
@@ -383,11 +331,14 @@ export class ProductosComponent implements OnInit {
       precioProducto: item.precioProducto,
       idCategoria: item.idCategoria,
       imagenProducto: item.imagenProducto,
-      estadoCategoria:item.estadoProducto
-      });
-      this.selectedFileName =this.productoForm.get("imagenProducto")?.value==null?this.serviceGenerico.traduccionMensajeGenerico("CU_ADMIN_ALIADOS.PLACEHOLDER_IMAGEN"):this.imagenBase64=this.productoForm.get("imagenProducto")?.value
-
-
+      estadoCategoria: item.estadoProducto,
+    });
+    this.selectedFileName =
+      this.productoForm.get('imagenProducto')?.value == null
+        ? this.serviceGenerico.traduccionMensajeGenerico(
+            'CU_ADMIN_ALIADOS.PLACEHOLDER_IMAGEN'
+          )
+        : (this.imagenBase64 = this.productoForm.get('imagenProducto')?.value);
   }
   obtenerCategorias() {
     this.spinner.show();
@@ -399,24 +350,27 @@ export class ProductosComponent implements OnInit {
       },
       (error: any) => {
         this.spinner.hide();
-       
       }
     );
   }
-  cambiarEstado(item:Producto){
+  cambiarEstado(item: Producto) {
     this.spinner.show();
     this.productosService.cambiarEstadoProducto(item).subscribe({
-      next: (resp) => {
-        // if (
-        //   resp[CONSTANTES.CODIGO_RESPUESTA] &&
-        //   resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
-        // ) {
-        //   this.serviceGenerico.alertaMensajeInformacion(resp[CONSTANTES.MENSAJE_RESPUESTA]);
+      next: (resp: any) => {
+        if (
+          resp[CONSTANTES.CODIGO_RESPUESTA] &&
+          resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
+        ) {
+          this.serviceGenerico.alertaMensajeInformacion(
+            resp[CONSTANTES.MENSAJE_RESPUESTA]
+          );
 
-           this.recargarLista();
-        // } else {
-        //   this.serviceGenerico.alertaMensajeInformacion(resp[CONSTANTES.MENSAJE_RESPUESTA]);
-        // }
+          this.recargarLista();
+        } else {
+          this.serviceGenerico.alertaMensajeInformacion(
+            resp[CONSTANTES.MENSAJE_RESPUESTA]
+          );
+        }
       },
 
       error: (err: any) => {},
@@ -425,8 +379,5 @@ export class ProductosComponent implements OnInit {
         this.spinner.hide();
       },
     });
-
-
   }
- 
 }

@@ -6,8 +6,8 @@ export interface Proveedor {
 	nombreProveedor: string;
 	telefono:string;
 	email:string;
-	idDepartamento:string;
-	idMunicipio:string;
+	idDepartamento:number;
+	idMunicipio:number;
 	nombreDepartamento:string;
 	nombreMunicipio:string;
 	estado:string;
@@ -21,8 +21,8 @@ export let PROVEEDOR = {
 	nombreProveedor:['',Validators.required],
 	telefono:[''],
 	email:[''],
-	idDepartamento:[''],
-	idMunicipio:[''],
+	idDepartamento:[],
+	idMunicipio:[],
 	estado:[''],
 	nombreMunicipi:[''],
 	direccion:['']

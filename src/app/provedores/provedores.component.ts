@@ -13,6 +13,7 @@ import { GenericoService } from 'src/app/services/generico/generico.service';
 import { ProveedorService } from 'src/app/services/negocio/proveedor/proveedor.service';
 import { NgxSpinnerService } from "ngx-spinner";
 import Swal from 'sweetalert2';
+import { CONSTANTES } from 'src/app/constants/INVETARIOJS.constants';
 
 @Component({
   selector: 'app-provedores',
@@ -57,7 +58,9 @@ export class ProvedoresComponent {
 
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+
+  }
   onSort({ column, direction }: SortEvent) {
     // resetting other headers
     this.headers.forEach((header) => {
@@ -107,34 +110,34 @@ export class ProvedoresComponent {
           this.proveedorsService
             .crearProveedor(this.provedorForm.value)
             .subscribe({
-              next: (resp) => {
+              next: (resp:any) => {
 
                 this.spinner.hide();
                 this.closebuttonCrear.nativeElement.click();
                 this.recargarLista();
-                // if (
-                //   resp[CONSTANTES.CODIGO_RESPUESTA] &&
-                //   resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
-                // ) {
-                //   this.provedorForm.reset();
-                //   this.serviceGenerico.alertaMensajeInformacion(
-                //     resp[CONSTANTES.MENSAJE_RESPUESTA]
-                //   );
-                //   this.spinner.hide();
-                //   this.closebuttonCrear.nativeElement.click();
-                //   this.recargarLista();
-                // } else if (
-                //   resp[CONSTANTES.CODIGO_RESPUESTA] &&
-                //   (resp[CONSTANTES.CODIGO_RESPUESTA] ===
-                //     CONSTANTES.CORREO_EXISTE ||
-                //     resp[CONSTANTES.CODIGO_RESPUESTA] ===
-                //       CONSTANTES.DOCUMENTO_EXISTE)
-                // ) {
-                //   this.serviceGenerico.alertaMensajeInformacion(
-                //     resp[CONSTANTES.MENSAJE_RESPUESTA]
-                //   );
-                //   this.spinner.hide();
-                // }
+                if (
+                  resp[CONSTANTES.CODIGO_RESPUESTA] &&
+                  resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
+                ) {
+                  this.provedorForm.reset();
+                  this.serviceGenerico.alertaMensajeInformacion(
+                    resp[CONSTANTES.MENSAJE_RESPUESTA]
+                  );
+                  this.spinner.hide();
+                  this.closebuttonCrear.nativeElement.click();
+                  this.recargarLista();
+                } else if (
+                  resp[CONSTANTES.CODIGO_RESPUESTA] &&
+                  (resp[CONSTANTES.CODIGO_RESPUESTA] ===
+                    CONSTANTES.CORREO_EXISTE ||
+                    resp[CONSTANTES.CODIGO_RESPUESTA] ===
+                      CONSTANTES.DOCUMENTO_EXISTE)
+                ) {
+                  this.serviceGenerico.alertaMensajeInformacion(
+                    resp[CONSTANTES.MENSAJE_RESPUESTA]
+                  );
+                  this.spinner.hide();
+                }
               },
               error: (err: any) => {
                 console.error('err', err);
@@ -185,33 +188,33 @@ export class ProvedoresComponent {
             this.proveedorsService
               .modificarProveedor(this.provedorForm.value)
               .subscribe({
-                next: (resp) => {
+                next: (resp:any) => {
   
                   this.spinner.hide();
                   this.recargarLista();
-                  // if (
-                  //   resp[CONSTANTES.CODIGO_RESPUESTA] &&
-                  //   resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
-                  // ) {
-                  //   this.provedorForm.reset();
-                  //   this.serviceGenerico.alertaMensajeInformacion(
-                  //     resp[CONSTANTES.MENSAJE_RESPUESTA]
-                  //   );
-                  //   this.spinner.hide();
-                  //   this.closebuttonCrear.nativeElement.click();
-                  //   this.recargarLista();
-                  // } else if (
-                  //   resp[CONSTANTES.CODIGO_RESPUESTA] &&
-                  //   (resp[CONSTANTES.CODIGO_RESPUESTA] ===
-                  //     CONSTANTES.CORREO_EXISTE ||
-                  //     resp[CONSTANTES.CODIGO_RESPUESTA] ===
-                  //       CONSTANTES.DOCUMENTO_EXISTE)
-                  // ) {
-                  //   this.serviceGenerico.alertaMensajeInformacion(
-                  //     resp[CONSTANTES.MENSAJE_RESPUESTA]
-                  //   );
-                  //   this.spinner.hide();
-                  // }
+                  if (
+                    resp[CONSTANTES.CODIGO_RESPUESTA] &&
+                    resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
+                  ) {
+                    this.provedorForm.reset();
+                    this.serviceGenerico.alertaMensajeInformacion(
+                      resp[CONSTANTES.MENSAJE_RESPUESTA]
+                    );
+                    this.spinner.hide();
+                    this.closebuttonModificar.nativeElement.click();
+                    this.recargarLista();
+                  } else if (
+                    resp[CONSTANTES.CODIGO_RESPUESTA] &&
+                    (resp[CONSTANTES.CODIGO_RESPUESTA] ===
+                      CONSTANTES.CORREO_EXISTE ||
+                      resp[CONSTANTES.CODIGO_RESPUESTA] ===
+                        CONSTANTES.DOCUMENTO_EXISTE)
+                  ) {
+                    this.serviceGenerico.alertaMensajeInformacion(
+                      resp[CONSTANTES.MENSAJE_RESPUESTA]
+                    );
+                    this.spinner.hide();
+                  }
                 },
                 error: (err: any) => {
                   console.error('err', err);
@@ -252,6 +255,7 @@ export class ProvedoresComponent {
     this.detallesCategoria.nombreProveedor = item.nombreProveedor;
     this.detallesCategoria.direccion = item.direccion;
     this.detallesCategoria.email = item.email;
+    this.detallesCategoria.idDepartamento = item.idDepartamento;
     this.detallesCategoria.nombreDepartamento = item.nombreDepartamento;
     this.detallesCategoria.nombreMunicipio = item.nombreMunicipio;
     this.detallesCategoria.telefono = item.telefono;
@@ -259,14 +263,12 @@ export class ProvedoresComponent {
 
     console.log(this.detallesCategoria);
   }
-  cargarServicios() {
-    
-    this.obtenerDepartamentos();
-  }
+  
 
 
   cargarModificar(item:Proveedor){
     this.mostarDetalleModal=false;
+    console.log(item.idDepartamento);
     this.provedorForm.patchValue({
       idProveedor: item.idProveedor,
       nombreProveedor: item.nombreProveedor,
@@ -275,26 +277,26 @@ export class ProvedoresComponent {
       telefono: item.telefono,
       idMunicipio: item.idMunicipio,
       nombreMunicipio: item.nombreMunicipio,
-
       idDepartamento: item.idDepartamento,      
       estado:item.estado
       });
+      this.obtenerMunicipios(item.idMunicipio);
 
   }
   cambiarEstado(item:Proveedor){
     this.spinner.show();
      this.proveedorsService.cambiarEstadoProveedor(item).subscribe({
-       next: (resp) => {
-    //     // if (
-    //     //   resp[CONSTANTES.CODIGO_RESPUESTA] &&
-    //     //   resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
-    //     // ) {
-    //     //   this.serviceGenerico.alertaMensajeInformacion(resp[CONSTANTES.MENSAJE_RESPUESTA]);
+       next: (resp:any) => {
+        if (
+          resp[CONSTANTES.CODIGO_RESPUESTA] &&
+          resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
+        ) {
+          this.serviceGenerico.alertaMensajeInformacion(resp[CONSTANTES.MENSAJE_RESPUESTA]);
 
           this.recargarLista();
-    //     // } else {
-    //     //   this.serviceGenerico.alertaMensajeInformacion(resp[CONSTANTES.MENSAJE_RESPUESTA]);
-    //     // }
+        } else {
+          this.serviceGenerico.alertaMensajeInformacion(resp[CONSTANTES.MENSAJE_RESPUESTA]);
+        }
        },
 
       error: (err: any) => {},
@@ -308,20 +310,27 @@ export class ProvedoresComponent {
   }
   
   obtenerMunicipios(id:any) {
+    let valor:number
+    if(id instanceof Event){
+      const target = id.target as HTMLInputElement; // Asumimos que el evento proviene de un <input>
+      valor = Number(target.value); // Obtiene el valor como string
+    }
+    else{
+      valor=id
+    }
     
     this.spinner.show();
-    this.serviceGenerico.obtenerMunicipios(id.target.value).subscribe({
+    this.serviceGenerico.obtenerMunicipios(valor).subscribe({
       next: (resp:any) => {
-        console.log("enamo");
-        console.log(resp['lista']);
+        
         this.tipoMunicipios = resp['lista'];
 
-        // if (
-        //   resp[CONSTANTES.CODIGO_RESPUESTA] &&
-        //   resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
-        // ) {
-        //   this.tipoDepartamento = resp['lista'];
-        // }
+        if (
+          resp[CONSTANTES.CODIGO_RESPUESTA] &&
+          resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
+        ) {
+          this.tipoMunicipios = resp['lista'];
+        }
       },
 
       error: (err: any) => {},
@@ -339,12 +348,12 @@ export class ProvedoresComponent {
         console.log(resp['lista']);
         this.tipoDepartamento = resp['lista'];
 
-        // if (
-        //   resp[CONSTANTES.CODIGO_RESPUESTA] &&
-        //   resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
-        // ) {
-        //   this.tipoDepartamento = resp['lista'];
-        // }
+        if (
+          resp[CONSTANTES.CODIGO_RESPUESTA] &&
+          resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
+        ) {
+          this.tipoDepartamento = resp['lista'];
+        }
       },
 
       error: (err: any) => {},

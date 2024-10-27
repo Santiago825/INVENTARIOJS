@@ -22,6 +22,8 @@ export class GenericoService {
     return this.http.get(`http://localhost:8080/consultar_departamentos`);
   }
   obtenerMunicipios(id:number){
+    console.log("hilton");
+    console.log(id);
     const headers = new HttpHeaders({
       'Content-Type': 'application/json; charset=utf-8',
       'state': `categorias`,

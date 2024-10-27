@@ -1,819 +1,919 @@
-
 <ngx-spinner
   bdColor="rgba(208, 207, 208, 0.8)"
   template="<img src='../../assets/photos/load.gif' />"
 >
-Cargando
+  Cargando
 </ngx-spinner>
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800 titulo">{{"CU_ADMIN_PROVEEDOR.TITULO_ADMIN_PROVEEDOR"| translate}}</h1>
-  </div>
-  
-  <form>
-    <div class="card border-left-primary shadow h-100 py-2">
-      <div class="card-body row">
-        <div class="col-md-12">
-          <div class="d-flex justify-content-end">
-            <div class="ml-auto">
-              <button
+  <h1 class="h3 mb-0 text-gray-800 titulo">
+    {{ "CU_ADMIN_PROVEEDOR.TITULO_ADMIN_PROVEEDOR" | translate }}
+  </h1>
+</div>
+
+<form>
+  <div class="card border-left-primary shadow h-100 py-2">
+    <div class="card-body row">
+      <div class="col-md-12">
+        <div class="d-flex justify-content-end">
+          <div class="ml-auto">
+            <button
               (click)="resetearFormulario()"
-                class="btn btn-secondary btn-icon-split me-2"
-                type="button"
-                data-toggle="modal"
-                #closebuttonCrear
-                data-target="#crearModal"
-                data-backdrop="false"
-              >
-                <span class="me-2 icon text-white-50">
-                  <i class="fas fa-plus"></i>
-                </span>
-                <span class="text">{{ 'BOTON_CREAR' | translate }}</span>
-              </button>
-              <button class="btn btn-secondary btn-icon-split me-2" type="button">
-                <span class="icon text-white-50 me-2">
-                  <i class="fas fa-file-excel"></i>
-                </span>
-                <span class="text">{{ 'BOTON_EXPORTAR' | translate }}</span>
-              </button>
-              <button (click)="this.recargarLista()" class="btn btn-secondary btn-icon-split" type="button">
-                <span class="icon text-white-50 me-2">
-                  <i class="fas fa-sync"></i>
-                </span>
-                <span class="text">{{ 'BOTON_REFRESCAR' | translate }}</span>
-              </button>
-            </div>
+              class="btn btn-secondary btn-icon-split me-2"
+              type="button"
+              data-toggle="modal"
+              #closebuttonCrear
+              data-target="#crearModal"
+              data-backdrop="false"
+            >
+              <span class="me-2 icon text-white-50">
+                <i class="fas fa-plus"></i>
+              </span>
+              <span class="text">{{ "BOTON_CREAR" | translate }}</span>
+            </button>
+            <button class="btn btn-secondary btn-icon-split me-2" type="button">
+              <span class="icon text-white-50 me-2">
+                <i class="fas fa-file-excel"></i>
+              </span>
+              <span class="text">{{ "BOTON_EXPORTAR" | translate }}</span>
+            </button>
+            <button
+              (click)="this.recargarLista()"
+              class="btn btn-secondary btn-icon-split"
+              type="button"
+            >
+              <span class="icon text-white-50 me-2">
+                <i class="fas fa-sync"></i>
+              </span>
+              <span class="text">{{ "BOTON_REFRESCAR" | translate }}</span>
+            </button>
           </div>
         </div>
-  
-        <div class="col-md-12">
-          <div class="row">
-            <div class="col-md-6">
-              <label>
-                <h6 class="m-0 font-weight-bold">{{"CU_ADMIN_CATEGORIAS.BUSCAR_CATEGORIA"|translate}}</h6>
-              </label>
-              <input
-                type="text"
-                class="form-control form-control-user"
-                name="searchTerm"
-                [(ngModel)]="service.searchTerm"
-                placeholder="{{'BOTON_BUSCAR'|translate}}"
-              />
-            </div>
-            <div class="col-md-6">
-              <br />
-              <span class="col col-form-label" *ngIf="service.loading$ | async"
-                >{{"CAMPO_BUSCANDO"|translate}}</span
-              >
-            </div>
+      </div>
+
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-6">
+            <label>
+              <h6 class="m-0 font-weight-bold">
+                {{ "CU_ADMIN_CATEGORIAS.BUSCAR_CATEGORIA" | translate }}
+              </h6>
+            </label>
+            <input
+              type="text"
+              class="form-control form-control-user"
+              name="searchTerm"
+              [(ngModel)]="service.searchTerm"
+              placeholder="{{ 'BOTON_BUSCAR' | translate }}"
+            />
+          </div>
+          <div class="col-md-6">
+            <br />
+            <span class="col col-form-label" *ngIf="service.loading$ | async">{{
+              "CAMPO_BUSCANDO" | translate
+            }}</span>
           </div>
         </div>
       </div>
     </div>
-  </form>
-  
-  <form>
-    <div class="card border-left-primary shadow h-100 py-2 mt-4 px-4">
-      <div class="card-body row">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th scope="col" sortableProve="idProveedor" >#</th>
-              <th scope="col" sortableProve="nombreProveedor" >
-                {{"Nombre"|translate}}
-              </th>
-              <th scope="col" sortableProve="telefono" >
-                {{"TITULO_TELEFONO"|translate}}
-              </th>
-              <th scope="col" sortableProve="direccion" >
-                {{"TITULO_DIRECCION"|translate}}
-              </th>
-              <th scope="col" sortableProve="email" >
-                {{"TITULO_EMAIL"|translate}}
-              </th>
-              <th scope="col" sortableProve="nombreMunicipio" >
-                {{"TITULO_MUNICIPIO"|translate}}
-              </th>
-              <th scope="col" sortableProve="estado" >
-                {{"TITULO_ESTADO"|translate}}
-              </th>
-              
-              <th scope="col"  >
-                {{"TITULO_ACCIONES"|translate}}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of countries$ | async">
-              <th scope="row">{{ item.idProveedor }}</th>
-              <td>
-                <ngb-highlight
-                  [result]="item.nombreProveedor"
-                  [term]="service.searchTerm"
-                ></ngb-highlight>
-              </td>
-              <td>
-                <ngb-highlight
-                  [result]="item.direccion"
-                  [term]="service.searchTerm"
-                ></ngb-highlight>
-              </td>
-              <td>
-                <ngb-highlight
-                  [result]="item.email"
-                  [term]="service.searchTerm"
-                ></ngb-highlight>
-              </td>
-              <td>
-                <ngb-highlight
-                  [result]="item.telefono"
-                  [term]="service.searchTerm"
-                ></ngb-highlight>
-              </td>
-              <td>
-                <ngb-highlight
-                  [result]="item.nombreMunicipio"
-                  [term]="service.searchTerm"
-                ></ngb-highlight>
-              </td>
-              <td>
-                <ngb-highlight
-                [result]="item.estado == 'A' ? ('TOOLTIP_ACTIVO' | translate) :('TOOLTIP_INACTIVO' | translate) "
+  </div>
+</form>
+
+<form>
+  <div class="card border-left-primary shadow h-100 py-2 mt-4 px-4">
+    <div class="card-body row">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col" sortableProve="idProveedor">#</th>
+            <th scope="col" sortableProve="nombreProveedor">
+              {{ "Nombre" | translate }}
+            </th>
+            <th scope="col" sortableProve="telefono">
+              {{ "TITULO_TELEFONO" | translate }}
+            </th>
+            <th scope="col" sortableProve="direccion">
+              {{ "TITULO_DIRECCION" | translate }}
+            </th>
+            <th scope="col" sortableProve="email">
+              {{ "TITULO_EMAIL" | translate }}
+            </th>
+            <th scope="col" sortableProve="nombreMunicipio">
+              {{ "TITULO_MUNICIPIO" | translate }}
+            </th>
+            <th scope="col" sortableProve="estado">
+              {{ "TITULO_ESTADO" | translate }}
+            </th>
+
+            <th scope="col">
+              {{ "TITULO_ACCIONES" | translate }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of countries$ | async; let i = index">
+            <th scope="row">{{ i+1 }}</th>
+            <td>
+              <ngb-highlight
+                [result]="item.nombreProveedor"
                 [term]="service.searchTerm"
               ></ngb-highlight>
-                
-              </td>
-              <td>
-                <button (click)="detalleItem(item)" class="btn mx-1" type="button" ngbTooltip="Detalle" data-toggle="modal"
-                  data-target="#detalleModal" data-backdrop="false">
-                  <span class="icon">
-                    <i class="fas fa-eye"></i>
-                  </span>
+            </td>
+            <td>
+              <ngb-highlight
+                [result]="item.direccion"
+                [term]="service.searchTerm"
+              ></ngb-highlight>
+            </td>
+            <td>
+              <ngb-highlight
+                [result]="item.email"
+                [term]="service.searchTerm"
+              ></ngb-highlight>
+            </td>
+            <td>
+              <ngb-highlight
+                [result]="item.telefono"
+                [term]="service.searchTerm"
+              ></ngb-highlight>
+            </td>
+            <td>
+              <ngb-highlight
+                [result]="item.nombreMunicipio"
+                [term]="service.searchTerm"
+              ></ngb-highlight>
+            </td>
+            <td>
+              <ngb-highlight
+                [result]="
+                  item.estado == 'A'
+                    ? ('TOOLTIP_ACTIVO' | translate)
+                    : ('TOOLTIP_INACTIVO' | translate)
+                "
+                [term]="service.searchTerm"
+              ></ngb-highlight>
+            </td>
+            <td>
+              <button
+                (click)="detalleItem(item)"
+                class="btn mx-1"
+                type="button"
+                ngbTooltip="Detalle"
+                data-toggle="modal"
+                data-target="#detalleModal"
+                data-backdrop="false"
+              >
+                <span class="icon">
+                  <i class="fas fa-eye"></i>
+                </span>
+              </button>
+              <button
+                (click)="
+                  resetearFormulario(); cargarModificar(item); 
+                "
+                class="btn mx-1"
+                type="button"
+                data-backdrop="false"
+                ngbTooltip="Editar"
+                #closebuttonModificar
+                data-toggle="modal"
+                data-target="#editModal"
+              >
+                <span class="icon">
+                  <i class="fas fa-edit"></i>
+                </span>
+              </button>
+
+              <button
+                class="btn dropdown-toggle"
+                type="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                ngbTooltip="Estado"
+              >
+                <i class="fas fa-power-off"></i>
+              </button>
+              <div class="dropdown-menu">
+                <button
+                  (click)="cambiarEstado(item)"
+                  class="dropdown-item"
+                  [disabled]="item.estado === 'A'"
+                >
+                  <i class="fas fa-check"></i>
+                  {{ "TOOLTIP_ACTIVO" | translate }}
                 </button>
-                <button (click)="resetearFormulario();cargarModificar(item);cargarServicios()" class="btn mx-1" type="button" data-backdrop="false" ngbTooltip="Editar" #closebuttonModificar data-toggle="modal"
-                  data-target="#editModal">
-                  <span class="icon">
-                    <i class="fas fa-edit"></i>
-                  </span>
+                <button
+                  (click)="cambiarEstado(item)"
+                  class="dropdown-item"
+                  [disabled]="item.estado === 'I'"
+                >
+                  <i class="fas fa-times"></i>
+                  {{ "TOOLTIP_INACTIVO" | translate }}
                 </button>
-  
-                <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
-                  aria-expanded="false" ngbTooltip="Estado">
-                  <i class="fas fa-power-off"></i>
-                </button>
-                <div class="dropdown-menu">
-                  <button (click)="cambiarEstado(item)" class="dropdown-item" [disabled]="item.estado === 'A'">
-                    <i class="fas fa-check"></i>
-                    {{"TOOLTIP_ACTIVO"|translate}}
-                  </button>
-                  <button (click)="cambiarEstado(item)" class="dropdown-item" [disabled]="item.estado === 'I'">
-                    <i class="fas fa-times"></i>
-                    {{"TOOLTIP_INACTIVO"|translate}}
-                  </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-between p-2">
+    <ngb-pagination
+      [collectionSize]="(total$ | async)!"
+      [(page)]="service.page"
+      [pageSize]="service.pageSize"
+    >
+    </ngb-pagination>
+
+    <select
+      class="custom-select"
+      style="width: auto"
+      name="pageSize"
+      [(ngModel)]="service.pageSize"
+    >
+      <option [ngValue]="2">2 items per page</option>
+      <option [ngValue]="4">4 items per page</option>
+      <option [ngValue]="6">6 items per page</option>
+    </select>
+  </div>
+</form>
+
+<!-- crear Modal -->
+<div
+  class="modal fade"
+  id="crearModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="crearModalLabel"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="crearModalLabel" style="color: black">
+          {{ "CU_ADMIN_CATEGORIAS.CREAR_CATEGORIA_TITLE" | translate }}
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span class="icon">
+            <i class="fas fa-times-circle"></i>
+          </span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="provedorForm" (ngSubmit)="guardarProveedor()">
+          <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body row">
+              <div class="form-group" style="color: black">
+                <div class="row paddingtop">
+                  <!-- nombre -->
+                  <div class="d-flex col-md-12 align-items-center">
+                    <div class="col-md-3 mt-2">
+                      <label>
+                        <h6 class="m-0 font-weight-bold">
+                          {{
+                            "CU_ADMIN_PROVEEDOR.NOMBRE_PROVEEDOR" | translate
+                          }}
+                          *
+                        </h6>
+                      </label>
+                    </div>
+                    <div class="col-md-6 mt-2">
+                      <input
+                        type="text"
+                        class="form-control form-control-user"
+                        name="searchTerm"
+                        formControlName="nombreProveedor"
+                        required="true"
+                        [class.is-invalid]="
+                          validarCampoObligatorio('nombreProveedor')
+                        "
+                        placeholder="{{
+                          'CU_ADMIN_PROVEEDOR.NOMBRE_PROVEEDOR' | translate
+                        }}"
+                      />
+                      <small
+                        *ngIf="validarCampoObligatorio('nombreProveedor')"
+                        class="text-danger"
+                        >{{ "CAMPO_OBLIGATORIO" | translate }}</small
+                      >
+                    </div>
+                  </div>
+                  <!-- Direccion -->
+                  <div class="d-flex col-md-12 align-items-center">
+                    <div class="col-md-3 mt-2">
+                      <label>
+                        <h6 class="m-0 font-weight-bold">
+                          {{ "TITULO_DIRECCION" | translate }} *
+                        </h6>
+                      </label>
+                    </div>
+                    <div class="col-md-6 mt-2">
+                      <input
+                        type="text"
+                        class="form-control form-control-user"
+                        name="searchTerm"
+                        formControlName="direccion"
+                        required="true"
+                        [class.is-invalid]="
+                          validarCampoObligatorio('direccion')
+                        "
+                        placeholder="{{ 'TITULO_DIRECCION' | translate }}"
+                      />
+                      <small
+                        *ngIf="validarCampoObligatorio('direccion')"
+                        class="text-danger"
+                        >{{ "CAMPO_OBLIGATORIO" | translate }}</small
+                      >
+                    </div>
+                  </div>
+                  <!-- Telefono -->
+                  <div class="d-flex col-md-12 align-items-center">
+                    <div class="col-md-3 mt-2">
+                      <label>
+                        <h6 class="m-0 font-weight-bold">
+                          {{ "TITULO_TELEFONO" | translate }} *
+                        </h6>
+                      </label>
+                    </div>
+                    <div class="col-md-6 mt-2">
+                      <input
+                        type="text"
+                        class="form-control form-control-user"
+                        name="searchTerm"
+                        formControlName="telefono"
+                        required="true"
+                        [class.is-invalid]="validarCampoObligatorio('telefono')"
+                        placeholder="{{ 'TITULO_TELEFONO' | translate }}"
+                      />
+                      <small
+                        *ngIf="validarCampoObligatorio('telefono')"
+                        class="text-danger"
+                        >{{ "CAMPO_OBLIGATORIO" | translate }}</small
+                      >
+                    </div>
+                  </div>
+                  <!-- Correo -->
+                  <div class="d-flex col-md-12 align-items-center">
+                    <div class="col-md-3 mt-2">
+                      <label>
+                        <h6 class="m-0 font-weight-bold">
+                          {{ "TITULO_EMAIL" | translate }} *
+                        </h6>
+                      </label>
+                    </div>
+                    <div class="col-md-6 mt-2">
+                      <input
+                        type="email"
+                        class="form-control form-control-user"
+                        name="searchTerm"
+                        formControlName="email"
+                        required="true"
+                        [class.is-invalid]="validarCampoObligatorio('email')"
+                        placeholder="{{ 'TITULO_EMAIL' | translate }}"
+                      />
+                      <small
+                        *ngIf="validarCampoObligatorio('email')"
+                        class="text-danger"
+                        >{{ "CAMPO_OBLIGATORIO" | translate }}</small
+                      >
+                    </div>
+                  </div>
+                  <!-- Tipo Departamneto -->
+                  <div class="d-flex col-md-12">
+                    <div class="col-md-3 mt-2">
+                      <label>
+                        <h6 class="m-0 font-weight-bold">
+                          {{ "TITULO_DEPARTAMENTO" | translate }} *
+                        </h6>
+                      </label>
+                    </div>
+                    <div class="col-md-6 mt-2">
+                      <select
+                        class="form-control"
+                        name="miselect"
+                        formControlName="idDepartamento"
+                        required
+                        (change)="obtenerMunicipios($event)"
+                        [class.is-invalid]="
+                          validarCampoObligatorio('idDepartamento')
+                        "
+                      >
+                        <option disabled value="">
+                          {{ "TITULO_DEPARTAMENTO" | translate }}
+                        </option>
+                        <option
+                          [value]="item.idDepartamento"
+                          *ngFor="let item of tipoDepartamento"
+                        >
+                          {{ item.nombreDepartamento }}
+                        </option>
+                      </select>
+                      <small
+                        *ngIf="validarCampoObligatorio('idDepartamento')"
+                        class="text-danger"
+                        >{{ "CAMPO_OBLIGATORIO" | translate }}</small
+                      >
+                    </div>
+                  </div>
+                  <!-- muni 2 -->
+                  <div class="d-flex col-md-12">
+                    <div class="col-md-3 mt-2">
+                      <label>
+                        <h6 class="m-0 font-weight-bold">
+                          {{ "TITULO_MUNICIPIO" | translate }} *
+                        </h6>
+                      </label>
+                    </div>
+                    <div class="col-md-6 mt-2">
+                      <select
+                        class="form-control"
+                        name="miselect"
+                        formControlName="idMunicipio"
+                        required
+                        [class.is-invalid]="
+                          validarCampoObligatorio('idMunicipio')
+                        "
+                      >
+                        <option disabled value="">
+                          {{ "TITULO_MUNICIPIO" | translate }}
+                        </option>
+                        <option
+                          [value]="item.idMunicipio"
+                          *ngFor="let item of tipoMunicipios"
+                        >
+                          {{ item.nombreMunicipio }}
+                        </option>
+                      </select>
+                      <small
+                        *ngIf="validarCampoObligatorio('idMunicipio')"
+                        class="text-danger"
+                        >{{ "CAMPO_OBLIGATORIO" | translate }}</small
+                      >
+                    </div>
+                  </div>
+
+                  <!-- Botones -->
+                  <div class="col-md-12 mt-4">
+                    <div class="d-flex justify-content-between">
+                      <div class="ml-auto px-2 d-flex justify-content-between">
+                        <button
+                          class="btn btn-secondary btn-icon-split mr-2"
+                          type="submit"
+                          id="closeModal"
+                        >
+                          <span class="icon text-white-50 mr-1">
+                            <i class="fas fa-save"></i>
+                          </span>
+                          <span class="text">{{
+                            "BOTON_CREAR" | translate
+                          }}</span>
+                        </button>
+                        <button
+                          class="btn btn-danger btn-icon-split"
+                          type="button"
+                          data-dismiss="modal"
+                          aria-label="Close"
+                        >
+                          <span class="icon text-white-50 mr-1">
+                            <i class="fas fa-times"></i>
+                          </span>
+                          <span class="text">{{
+                            "BOTON_CANCELAR" | translate
+                          }}</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </td>
-             
-            </tr>
-          </tbody>
-        </table>
+              </div>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
-  
-    <div class="d-flex justify-content-between p-2">
-      <ngb-pagination 
-          [collectionSize]="(total$ | async)!" [(page)]="service.page" [pageSize]="service.pageSize">
-        </ngb-pagination>
-  
-      <select
-        class="custom-select"
-        style="width: auto"
-        name="pageSize"
-        [(ngModel)]="service.pageSize"
-      >
-        <option [ngValue]="2">2 items per page</option>
-        <option [ngValue]="4">4 items per page</option>
-        <option [ngValue]="6">6 items per page</option>
-      </select>
-    </div>
-  </form>
-  
-  	<!-- crear Modal -->
-    <div
-    class="modal fade"
-    id="crearModal"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="crearModalLabel"
-    aria-hidden="true"
+  </div>
+</div>
+
+<!--  Detalle modal -->
+<div
+  class="modal fade"
+  id="detalleModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="detalleModalLabel"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg"
   >
-    <div
-      class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg"
-    >
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="crearModalLabel" style="color: black">
-            {{ "CU_ADMIN_CATEGORIAS.CREAR_CATEGORIA_TITLE" | translate }}
-          </h5>
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
-            <span class="icon">
-              <i class="fas fa-times-circle"></i>
-            </span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form [formGroup]="provedorForm" (ngSubmit)="guardarProveedor()">
-            <div class="card border-left-primary shadow h-100 py-2">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detalleModalLabel" style="color: black">
+          {{ "CU_ADMIN_CATEGORIAS.DETALLE_CATEGORIA" | translate }}
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span class="icon">
+            <i class="fas fa-times-circle"></i>
+          </span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form *ngIf="mostarDetalleModal">
+          <div class="grid justify-content-center col-md-12 gap-5">
+            <!-- Persona -->
+
+            <div class="card border-left-primary shadow h-100 py-2 g-col-6 p-2">
               <div class="card-body row">
                 <div class="form-group" style="color: black">
                   <div class="row paddingtop">
-                    <!-- nombre -->
-                    <div  class="d-flex col-md-12  align-items-center">
-                      <div class="col-md-3 mt-2">
+                    <!-- Nombre -->
+                    <div class="d-flex col-md-12">
+                      <div class="col-md-6">
                         <label>
                           <h6 class="m-0 font-weight-bold">
-                            {{ "CU_ADMIN_PROVEEDOR.NOMBRE_PROVEEDOR" | translate }} *
+                            {{
+                              "CU_ADMIN_PROVEEDOR.NOMBRE_PROVEEDOR" | translate
+                            }}
                           </h6>
                         </label>
                       </div>
-                      <div class="col-md-6 mt-2 ">
-                        <input
-                          type="text"
-                          class="form-control form-control-user"
-                          name="searchTerm"
-                          formControlName="nombreProveedor"
-                          required="true"
-                          [class.is-invalid]="
-                            validarCampoObligatorio('nombreProveedor')
-                          "
-                          placeholder="{{
-                            'CU_ADMIN_PROVEEDOR.NOMBRE_PROVEEDOR' | translate
-                          }}"
-                        />
-                        <small
-                          *ngIf="validarCampoObligatorio('nombreProveedor')"
-                          class="text-danger"
-                          >{{ "CAMPO_OBLIGATORIO" | translate }}</small
-                        >
+                      <div class="col-md-6">
+                        <label>{{
+                          this.detallesCategoria.nombreProveedor
+                        }}</label>
                       </div>
                     </div>
-                    <!-- Direccion -->
-                    <div  class="d-flex col-md-12  align-items-center">
-                        <div class="col-md-3 mt-2">
-                          <label>
-                            <h6 class="m-0 font-weight-bold">
-                              {{ "TITULO_DIRECCION" | translate }} *
-                            </h6>
-                          </label>
-                        </div>
-                        <div class="col-md-6 mt-2 ">
-                          <input
-                            type="text"
-                            class="form-control form-control-user"
-                            name="searchTerm"
-                            formControlName="direccion"
-                            required="true"
-                            [class.is-invalid]="
-                              validarCampoObligatorio('direccion')
-                            "
-                            placeholder="{{
-                              'TITULO_DIRECCION' | translate
-                            }}"
-                          />
-                          <small
-                            *ngIf="validarCampoObligatorio('direccion')"
-                            class="text-danger"
-                            >{{ "CAMPO_OBLIGATORIO" | translate }}</small
-                          >
-                        </div>
-                      </div>
-                      <!-- Telefono -->
-                    <div  class="d-flex col-md-12  align-items-center">
-                        <div class="col-md-3 mt-2">
-                          <label>
-                            <h6 class="m-0 font-weight-bold">
-                              {{ "TITULO_TELEFONO" | translate }} *
-                            </h6>
-                          </label>
-                        </div>
-                        <div class="col-md-6 mt-2 ">
-                          <input
-                            type="text"
-                            class="form-control form-control-user"
-                            name="searchTerm"
-                            formControlName="telefono"
-                            required="true"
-                            [class.is-invalid]="
-                              validarCampoObligatorio('telefono')
-                            "
-                            placeholder="{{
-                              'TITULO_TELEFONO' | translate
-                            }}"
-                          />
-                          <small
-                            *ngIf="validarCampoObligatorio('telefono')"
-                            class="text-danger"
-                            >{{ "CAMPO_OBLIGATORIO" | translate }}</small
-                          >
-                        </div>
-                      </div>
-                      <!-- Correo -->
-                    <div  class="d-flex col-md-12  align-items-center">
-                        <div class="col-md-3 mt-2">
-                          <label>
-                            <h6 class="m-0 font-weight-bold">
-                              {{ "TITULO_EMAIL" | translate }} *
-                            </h6>
-                          </label>
-                        </div>
-                        <div class="col-md-6 mt-2 ">
-                          <input
-                            type="email"
-                            class="form-control form-control-user"
-                            name="searchTerm"
-                            formControlName="email"
-                            required="true"
-                            [class.is-invalid]="
-                              validarCampoObligatorio('email')
-                            "
-                            placeholder="{{
-                              'TITULO_EMAIL' | translate
-                            }}"
-                          />
-                          <small
-                            *ngIf="validarCampoObligatorio('email')"
-                            class="text-danger"
-                            >{{ "CAMPO_OBLIGATORIO" | translate }}</small
-                          >
-                        </div>
-                      </div>
-                       <!-- Tipo Departamneto -->
+                    <!-- telefono -->
                     <div class="d-flex col-md-12">
-                        <div class="col-md-3 mt-2">
-                          <label>
-                            <h6 class="m-0 font-weight-bold">{{'TITULO_DEPARTAMENTO' | translate }} *
-                            </h6>
-                          </label>
-                        </div>
-                        <div class="col-md-6 mt-2 ">
-                          <select class="form-control " name="miselect"  formControlName="idDepartamento"
-                            required (change)="obtenerMunicipios($event)"
-                            [class.is-invalid]="validarCampoObligatorio('idDepartamento')">
-                            <option  disabled value="">{{'TITULO_DEPARTAMENTO' | translate }}
-                            </option>
-                            <option  [value]="item.idDepartamento" *ngFor="let item of tipoDepartamento">{{item.nombreDepartamento}}
-                            </option>
-                          </select>
-                          <small *ngIf="validarCampoObligatorio('idDepartamento')"
-                            class="text-danger">{{'CAMPO_OBLIGATORIO'
-                            | translate }}</small>
-                        </div>
+                      <div class="col-md-6">
+                        <label>
+                          <h6 class="m-0 font-weight-bold">
+                            {{ "TITULO_TELEFONO" | translate }}
+                          </h6>
+                        </label>
                       </div>
-                      <!-- muni 2 -->
-                       <div class="d-flex col-md-12">
-                        <div class="col-md-3 mt-2">
-                          <label>
-                            <h6 class="m-0 font-weight-bold">{{'TITULO_MUNICIPIO' | translate }} *
-                            </h6>
-                          </label>
-                        </div>
-                        <div class="col-md-6 mt-2">
-                          <select class="form-control" name="miselect"  formControlName="idMunicipio"
-                            required
-                            [class.is-invalid]="validarCampoObligatorio('idMunicipio')">
-                            <option disabled value="">{{'TITULO_MUNICIPIO' | translate }}
-                            </option>
-                            <option [value]="item.idMunicipio" *ngFor="let item of tipoMunicipios">{{item.nombreMunicipio}}
-                            </option>
-                          </select>
-                          <small *ngIf="validarCampoObligatorio('idMunicipio')"
-                            class="text-danger">{{'CAMPO_OBLIGATORIO'
-                            | translate }}</small>
-                        </div>
-                      </div> 
-                    
-                      
-                    
-  
-                    <!-- Botones -->
-                    <div class="col-md-12 mt-4 ">
-                      <div class="d-flex justify-content-between  ">
-                        <div class="ml-auto  px-2 d-flex justify-content-between">
-                          <button
-                            class="btn btn-secondary btn-icon-split mr-2"
-                            type="submit"
-                            id="closeModal"
-                          >
-                            <span class="icon text-white-50 mr-1">
-                              <i class="fas fa-save"></i>
-                            </span>
-                            <span class="text">{{
-                              "BOTON_CREAR" | translate
-                            }}</span>
-                          </button>
-                          <button
-                            class="btn btn-danger btn-icon-split"
-                            type="button"
-                            data-dismiss="modal"
-                            aria-label="Close"
-                          >
-                            <span class="icon text-white-50 mr-1">
-                              <i class="fas fa-times"></i>
-                            </span>
-                            <span class="text">{{
-                              "BOTON_CANCELAR" | translate
-                            }}</span>
-                          </button>
-                        </div>
+                      <div class="col-md-6">
+                        <label>{{ this.detallesCategoria.telefono }}</label>
+                      </div>
+                    </div>
+                    <!-- direccion -->
+                    <div class="d-flex col-md-12">
+                      <div class="col-md-6">
+                        <label>
+                          <h6 class="m-0 font-weight-bold">
+                            {{ "TITULO_DIRECCION" | translate }}
+                          </h6>
+                        </label>
+                      </div>
+                      <div class="col-md-6">
+                        <label>{{ this.detallesCategoria.direccion }}</label>
+                      </div>
+                    </div>
+                    <!-- email -->
+                    <div class="d-flex col-md-12">
+                      <div class="col-md-6">
+                        <label>
+                          <h6 class="m-0 font-weight-bold">
+                            {{ "TITULO_EMAIL" | translate }}
+                          </h6>
+                        </label>
+                      </div>
+                      <div class="col-md-6">
+                        <label>{{ this.detallesCategoria.email }}</label>
+                      </div>
+                    </div>
+                    <!-- departemnto -->
+                    <div class="d-flex col-md-12">
+                      <div class="col-md-6">
+                        <label>
+                          <h6 class="m-0 font-weight-bold">
+                            {{ "TITULO_DEPARTAMENTO" | translate }}
+                          </h6>
+                        </label>
+                      </div>
+                      <div class="col-md-6">
+                        <label>{{
+                          this.detallesCategoria.nombreDepartamento
+                        }}</label>
+                      </div>
+                    </div>
+                    <!-- municipio -->
+                    <div class="d-flex col-md-12">
+                      <div class="col-md-6">
+                        <label>
+                          <h6 class="m-0 font-weight-bold">
+                            {{ "TITULO_MUNICIPIO" | translate }}
+                          </h6>
+                        </label>
+                      </div>
+                      <div class="col-md-6">
+                        <label>{{
+                          this.detallesCategoria.nombreMunicipio
+                        }}</label>
+                      </div>
+                    </div>
+                    <!-- Estado -->
+                    <div class="d-flex col-md-12">
+                      <div class="col-md-6">
+                        <label>
+                          <h6 class="m-0 font-weight-bold">
+                            {{ "TITULO_ESTADO" | translate }}
+                          </h6>
+                        </label>
+                      </div>
+                      <div class="col-md-6">
+                        <label>{{
+                          this.detallesCategoria.estado == "A"
+                            ? ("TOOLTIP_ACTIVO" | translate)
+                            : ("TOOLTIP_INACTIVO" | translate)
+                        }}</label>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
     </div>
   </div>
-  
-    <!--  Detalle modal -->
-    <div  class="modal fade" id="detalleModal" tabindex="-1" role="dialog" aria-labelledby="detalleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-      <div class="modal-content ">
-        <div class="modal-header">
-          <h5 class="modal-title" id="detalleModalLabel" style="color: black;">
-            {{ 'CU_ADMIN_CATEGORIAS.DETALLE_CATEGORIA' | translate }}</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span class="icon">
-              <i class="fas fa-times-circle"></i>
-            </span>
-          </button>
-        </div>
-        <div class="modal-body">
-   
-          <form *ngIf="mostarDetalleModal">
-            <div class="grid justify-content-center col-md-12 gap-5">
-              
-              <!-- Persona -->
-   
-              <div class=" card border-left-primary shadow h-100 py-2 g-col-6 p-2">
-                <div class="card-body row">
-   
-                  <div class="form-group" style="color: black;">
-   
-                    <div class="row paddingtop">
-                      
-   
-                      <!-- Nombre -->
-                      <div class="d-flex col-md-12 ">
-                        <div class="col-md-6">
-                          <label>
-                            <h6 class="m-0 font-weight-bold">{{'CU_ADMIN_PROVEEDOR.NOMBRE_PROVEEDOR' | translate
-                              }}</h6>
-                          </label>
-                        </div>
-                        <div class="col-md-6">
-                          <label>{{this.detallesCategoria.nombreProveedor}}</label>
-                        </div>
-                      </div>
-                        <!-- telefono -->
-                        <div class="d-flex col-md-12 ">
-                          <div class="col-md-6">
-                            <label>
-                              <h6 class="m-0 font-weight-bold">{{'TITULO_TELEFONO' | translate
-                                }}</h6>
-                            </label>
-                          </div>
-                          <div class="col-md-6">
-                            <label>{{this.detallesCategoria.telefono}}</label>
-                          </div>
-                        </div>
-                          <!-- direccion -->
-                      <div class="d-flex col-md-12 ">
-                        <div class="col-md-6">
-                          <label>
-                            <h6 class="m-0 font-weight-bold">{{'TITULO_DIRECCION' | translate
-                              }}</h6>
-                          </label>
-                        </div>
-                        <div class="col-md-6">
-                          <label>{{this.detallesCategoria.direccion}}</label>
-                        </div>
-                      </div>
-                        <!-- email -->
-                        <div class="d-flex col-md-12 ">
-                          <div class="col-md-6">
-                            <label>
-                              <h6 class="m-0 font-weight-bold">{{'TITULO_EMAIL' | translate
-                                }}</h6>
-                            </label>
-                          </div>
-                          <div class="col-md-6">
-                            <label>{{this.detallesCategoria.email}}</label>
-                          </div>
-                        </div>
-                          <!-- departemnto -->
-                      <div class="d-flex col-md-12 ">
-                        <div class="col-md-6">
-                          <label>
-                            <h6 class="m-0 font-weight-bold">{{'TITULO_DEPARTAMENTO' | translate
-                              }}</h6>
-                          </label>
-                        </div>
-                        <div class="col-md-6">
-                          <label>{{this.detallesCategoria.nombreDepartamento}}</label>
-                        </div>
-                      </div>
-                        <!-- municipio -->
-                        <div class="d-flex col-md-12 ">
-                          <div class="col-md-6">
-                            <label>
-                              <h6 class="m-0 font-weight-bold">{{'TITULO_MUNICIPIO' | translate
-                                }}</h6>
-                            </label>
-                          </div>
-                          <div class="col-md-6">
-                            <label>{{this.detallesCategoria.nombreMunicipio}}</label>
-                          </div>
-                        </div>
-                      <!-- Estado -->
-                      <div class="d-flex col-md-12 ">
-                        <div class="col-md-6">
-                          <label>
-                            <h6 class="m-0 font-weight-bold">{{'TITULO_ESTADO' | translate
-                              }}</h6>
-                          </label>
-                        </div>
-                        <div class="col-md-6">
-                          <label>{{this.detallesCategoria.estado=='A' ? ('TOOLTIP_ACTIVO' | translate) :('TOOLTIP_INACTIVO' | translate) }}</label>
-                        </div>
-                      </div>
-   
-                      
-   
+</div>
+
+<!-- modificar modal -->
+<div
+  class="modal fade"
+  id="editModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="editModalLabel"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="crearModalLabel" style="color: black">
+          {{ "CU_ADMIN_CATEGORIAS.CREAR_CATEGORIA_TITLE" | translate }}
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span class="icon">
+            <i class="fas fa-times-circle"></i>
+          </span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="provedorForm" (ngSubmit)="editarProveedor()">
+          <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body row">
+              <div class="form-group" style="color: black">
+                <div class="row paddingtop">
+                  <!-- nombre -->
+                  <div class="d-flex col-md-12 align-items-center">
+                    <div class="col-md-3 mt-2">
+                      <label>
+                        <h6 class="m-0 font-weight-bold">
+                          {{
+                            "CU_ADMIN_PROVEEDOR.NOMBRE_PROVEEDOR" | translate
+                          }}
+                          *
+                        </h6>
+                      </label>
                     </div>
-   
+                    <div class="col-md-6 mt-2">
+                      <input
+                        type="text"
+                        class="form-control form-control-user"
+                        name="searchTerm"
+                        formControlName="nombreProveedor"
+                        required="true"
+                        [class.is-invalid]="
+                          validarCampoObligatorio('nombreProveedor')
+                        "
+                        placeholder="{{
+                          'CU_ADMIN_PROVEEDOR.NOMBRE_PROVEEDOR' | translate
+                        }}"
+                      />
+                      <small
+                        *ngIf="validarCampoObligatorio('nombreProveedor')"
+                        class="text-danger"
+                        >{{ "CAMPO_OBLIGATORIO" | translate }}</small
+                      >
+                    </div>
                   </div>
-   
+                  <!-- Direccion -->
+                  <div class="d-flex col-md-12 align-items-center">
+                    <div class="col-md-3 mt-2">
+                      <label>
+                        <h6 class="m-0 font-weight-bold">
+                          {{ "TITULO_DIRECCION" | translate }} *
+                        </h6>
+                      </label>
+                    </div>
+                    <div class="col-md-6 mt-2">
+                      <input
+                        type="text"
+                        class="form-control form-control-user"
+                        name="searchTerm"
+                        formControlName="direccion"
+                        required="true"
+                        [class.is-invalid]="
+                          validarCampoObligatorio('direccion')
+                        "
+                        placeholder="{{ 'TITULO_DIRECCION' | translate }}"
+                      />
+                      <small
+                        *ngIf="validarCampoObligatorio('direccion')"
+                        class="text-danger"
+                        >{{ "CAMPO_OBLIGATORIO" | translate }}</small
+                      >
+                    </div>
+                  </div>
+                  <!-- Telefono -->
+                  <div class="d-flex col-md-12 align-items-center">
+                    <div class="col-md-3 mt-2">
+                      <label>
+                        <h6 class="m-0 font-weight-bold">
+                          {{ "TITULO_TELEFONO" | translate }} *
+                        </h6>
+                      </label>
+                    </div>
+                    <div class="col-md-6 mt-2">
+                      <input
+                        type="text"
+                        class="form-control form-control-user"
+                        name="searchTerm"
+                        formControlName="telefono"
+                        required="true"
+                        [class.is-invalid]="validarCampoObligatorio('telefono')"
+                        placeholder="{{ 'TITULO_TELEFONO' | translate }}"
+                      />
+                      <small
+                        *ngIf="validarCampoObligatorio('telefono')"
+                        class="text-danger"
+                        >{{ "CAMPO_OBLIGATORIO" | translate }}</small
+                      >
+                    </div>
+                  </div>
+                  <!-- Correo -->
+                  <div class="d-flex col-md-12 align-items-center">
+                    <div class="col-md-3 mt-2">
+                      <label>
+                        <h6 class="m-0 font-weight-bold">
+                          {{ "TITULO_EMAIL" | translate }} *
+                        </h6>
+                      </label>
+                    </div>
+                    <div class="col-md-6 mt-2">
+                      <input
+                        type="email"
+                        class="form-control form-control-user"
+                        name="searchTerm"
+                        formControlName="email"
+                        required="true"
+                        [class.is-invalid]="validarCampoObligatorio('email')"
+                        placeholder="{{ 'TITULO_EMAIL' | translate }}"
+                      />
+                      <small
+                        *ngIf="validarCampoObligatorio('email')"
+                        class="text-danger"
+                        >{{ "CAMPO_OBLIGATORIO" | translate }}</small
+                      >
+                    </div>
+                  </div>
+
+                  
+                  <!-- Tipo Departamneto -->
+                  <div class="d-flex col-md-12">
+                    <div class="col-md-3 mt-2">
+                      <label>
+                        <h6 class="m-0 font-weight-bold">
+                          {{ "TITULO_DEPARTAMENTO" | translate }} *
+                        </h6>
+                      </label>
+                    </div>
+                    <div class="col-md-6 mt-2">
+                      <select
+                        class="form-control"
+                        name="miselect"
+                        formControlName="idDepartamento"
+                        required
+                        (change)="obtenerMunicipios($event)"
+                        [class.is-invalid]="
+                          validarCampoObligatorio('idDepartamento')
+                        "
+                      >
+                        <option disabled value="">
+                          {{ "TITULO_DEPARTAMENTO" | translate }}
+                        </option>
+                        <option
+                          [value]="item.idDepartamento"
+                          *ngFor="let item of tipoDepartamento"
+                        >
+                          {{ item.nombreDepartamento }}
+                        </option>
+                      </select>
+                      <small
+                        *ngIf="validarCampoObligatorio('idDepartamento')"
+                        class="text-danger"
+                        >{{ "CAMPO_OBLIGATORIO" | translate }}</small
+                      >
+                    </div>
+                  </div>
+                  <!-- muni 2 -->
+                  <div class="d-flex col-md-12">
+                    <div class="col-md-3 mt-2">
+                      <label>
+                        <h6 class="m-0 font-weight-bold">
+                          {{ "TITULO_MUNICIPIO" | translate }} *
+                        </h6>
+                      </label>
+                    </div>
+                    <div class="col-md-6 mt-2">
+                      <select
+                        class="form-control"
+                        name="miselect"
+                        formControlName="idMunicipio"
+                        required
+                        [class.is-invalid]="
+                          validarCampoObligatorio('idMunicipio')
+                        "
+                      >
+                        <option disabled value="">
+                          {{ "TITULO_MUNICIPIO" | translate }}
+                        </option>
+                        <option
+                          [value]="item.idMunicipio"
+                          *ngFor="let item of tipoMunicipios"
+                        >
+                          {{ item.nombreMunicipio }}
+                        </option>
+                      </select>
+                      <small
+                        *ngIf="validarCampoObligatorio('idMunicipio')"
+                        class="text-danger"
+                        >{{ "CAMPO_OBLIGATORIO" | translate }}</small
+                      >
+                    </div>
+                  </div>
+
+                  <!-- Botones -->
+                  <div class="col-md-12 mt-4">
+                    <div class="d-flex justify-content-between">
+                      <div class="ml-auto px-2 d-flex justify-content-between">
+                        <button
+                          class="btn btn-secondary btn-icon-split mr-2"
+                          type="submit"
+                          id="closeModal"
+                        >
+                          <span class="icon text-white-50 mr-1">
+                            <i class="fas fa-save"></i>
+                          </span>
+                          <span class="text">{{
+                            "BOTON_CREAR" | translate
+                          }}</span>
+                        </button>
+                        <button
+                          class="btn btn-danger btn-icon-split"
+                          type="button"
+                          data-dismiss="modal"
+                          aria-label="Close"
+                        >
+                          <span class="icon text-white-50 mr-1">
+                            <i class="fas fa-times"></i>
+                          </span>
+                          <span class="text">{{
+                            "BOTON_CANCELAR" | translate
+                          }}</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-   
               </div>
-   
             </div>
-   
-          </form>
-   
-        </div>
+          </div>
+        </form>
       </div>
     </div>
-   </div>
- 
-     	<!-- modificar modal -->
-       <div
-       class="modal fade"
-       id="editModal"
-       tabindex="-1"
-       role="dialog"
-       aria-labelledby="editModalLabel"
-       aria-hidden="true"
-     >
-       <div
-         class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg"
-       >
-         <div class="modal-content">
-           <div class="modal-header">
-             <h5 class="modal-title" id="crearModalLabel" style="color: black">
-               {{ "CU_ADMIN_CATEGORIAS.CREAR_CATEGORIA_TITLE" | translate }}
-             </h5>
-             <button
-               type="button"
-               class="close"
-               data-dismiss="modal"
-               aria-label="Close"
-             >
-               <span class="icon">
-                 <i class="fas fa-times-circle"></i>
-               </span>
-             </button>
-           </div>
-           <div class="modal-body">
-             <form [formGroup]="provedorForm" (ngSubmit)="editarProveedor()">
-               <div class="card border-left-primary shadow h-100 py-2">
-                 <div class="card-body row">
-                   <div class="form-group" style="color: black">
-                     <div class="row paddingtop">
-                       <!-- nombre -->
-                       <div  class="d-flex col-md-12  align-items-center">
-                         <div class="col-md-3 mt-2">
-                           <label>
-                             <h6 class="m-0 font-weight-bold">
-                               {{ "CU_ADMIN_PROVEEDOR.NOMBRE_PROVEEDOR" | translate }} *
-                             </h6>
-                           </label>
-                         </div>
-                         <div class="col-md-6 mt-2 ">
-                           <input
-                             type="text"
-                             class="form-control form-control-user"
-                             name="searchTerm"
-                             formControlName="nombreProveedor"
-                             required="true"
-                             [class.is-invalid]="
-                               validarCampoObligatorio('nombreProveedor')
-                             "
-                             placeholder="{{
-                               'CU_ADMIN_PROVEEDOR.NOMBRE_PROVEEDOR' | translate
-                             }}"
-                           />
-                           <small
-                             *ngIf="validarCampoObligatorio('nombreProveedor')"
-                             class="text-danger"
-                             >{{ "CAMPO_OBLIGATORIO" | translate }}</small
-                           >
-                         </div>
-                       </div>
-                       <!-- Direccion -->
-                       <div  class="d-flex col-md-12  align-items-center">
-                           <div class="col-md-3 mt-2">
-                             <label>
-                               <h6 class="m-0 font-weight-bold">
-                                 {{ "TITULO_DIRECCION" | translate }} *
-                               </h6>
-                             </label>
-                           </div>
-                           <div class="col-md-6 mt-2 ">
-                             <input
-                               type="text"
-                               class="form-control form-control-user"
-                               name="searchTerm"
-                               formControlName="direccion"
-                               required="true"
-                               [class.is-invalid]="
-                                 validarCampoObligatorio('direccion')
-                               "
-                               placeholder="{{
-                                 'TITULO_DIRECCION' | translate
-                               }}"
-                             />
-                             <small
-                               *ngIf="validarCampoObligatorio('direccion')"
-                               class="text-danger"
-                               >{{ "CAMPO_OBLIGATORIO" | translate }}</small
-                             >
-                           </div>
-                         </div>
-                         <!-- Telefono -->
-                       <div  class="d-flex col-md-12  align-items-center">
-                           <div class="col-md-3 mt-2">
-                             <label>
-                               <h6 class="m-0 font-weight-bold">
-                                 {{ "TITULO_TELEFONO" | translate }} *
-                               </h6>
-                             </label>
-                           </div>
-                           <div class="col-md-6 mt-2 ">
-                             <input
-                               type="text"
-                               class="form-control form-control-user"
-                               name="searchTerm"
-                               formControlName="telefono"
-                               required="true"
-                               [class.is-invalid]="
-                                 validarCampoObligatorio('telefono')
-                               "
-                               placeholder="{{
-                                 'TITULO_TELEFONO' | translate
-                               }}"
-                             />
-                             <small
-                               *ngIf="validarCampoObligatorio('telefono')"
-                               class="text-danger"
-                               >{{ "CAMPO_OBLIGATORIO" | translate }}</small
-                             >
-                           </div>
-                         </div>
-                         <!-- Correo -->
-                       <div  class="d-flex col-md-12  align-items-center">
-                           <div class="col-md-3 mt-2">
-                             <label>
-                               <h6 class="m-0 font-weight-bold">
-                                 {{ "TITULO_EMAIL" | translate }} *
-                               </h6>
-                             </label>
-                           </div>
-                           <div class="col-md-6 mt-2 ">
-                             <input
-                               type="email"
-                               class="form-control form-control-user"
-                               name="searchTerm"
-                               formControlName="email"
-                               required="true"
-                               [class.is-invalid]="
-                                 validarCampoObligatorio('email')
-                               "
-                               placeholder="{{
-                                 'TITULO_EMAIL' | translate
-                               }}"
-                             />
-                             <small
-                               *ngIf="validarCampoObligatorio('email')"
-                               class="text-danger"
-                               >{{ "CAMPO_OBLIGATORIO" | translate }}</small
-                             >
-                           </div>
-                         </div>
-                          <!-- Tipo Departamneto -->
-                       <div class="d-flex col-md-12">
-                           <div class="col-md-3 mt-2">
-                             <label>
-                               <h6 class="m-0 font-weight-bold">{{'TITULO_DEPARTAMENTO' | translate }} *
-                               </h6>
-                             </label>
-                           </div>
-                           <div class="col-md-6 mt-2 ">
-                             <ng-select class="form-control " name="miselect"  formControlName="idDepartamento"
-                               required (change)="obtenerMunicipios($event)"
-                               [class.is-invalid]="validarCampoObligatorio('idDepartamento')">
-                               <ng-option  disabled value="">{{'TITULO_DEPARTAMENTO' | translate }}
-                               </ng-option>
-                               <ng-option  [value]="item.idDepartamento" *ngFor="let item of tipoDepartamento">{{item.nombreDepartamento}}
-                               </ng-option>
-                             </ng-select>
-                             <small *ngIf="validarCampoObligatorio('idDepartamento')"
-                               class="text-danger">{{'CAMPO_OBLIGATORIO'
-                               | translate }}</small>
-                           </div>
-                         </div>
-                         <!-- muni 2 -->
-                          <div class="d-flex col-md-12">
-                           <div class="col-md-3 mt-2">
-                             <label>
-                               <h6 class="m-0 font-weight-bold">{{'TITULO_MUNICIPIO' | translate }} *
-                               </h6>
-                             </label>
-                           </div>
-                           <div class="col-md-6 mt-2">
-                             <ng-select class="form-control" name="miselect"  formControlName="idMunicipio"
-                               required
-                               [class.is-invalid]="validarCampoObligatorio('idMunicipio')">
-                               <ng-option disabled value="">{{'TITULO_MUNICIPIO' | translate }}
-                               </ng-option>
-                               <ng-option [value]="item.idMunicipio" *ngFor="let item of tipoMunicipios">{{item.nombreMunicipio}}
-                               </ng-option>
-                             </ng-select>
-                             <small *ngIf="validarCampoObligatorio('idMunicipio')"
-                               class="text-danger">{{'CAMPO_OBLIGATORIO'
-                               | translate }}</small>
-                           </div>
-                         </div> 
-                       
-                         
-                       
-     
-                       <!-- Botones -->
-                       <div class="col-md-12 mt-4 ">
-                         <div class="d-flex justify-content-between  ">
-                           <div class="ml-auto  px-2 d-flex justify-content-between">
-                             <button
-                               class="btn btn-secondary btn-icon-split mr-2"
-                               type="submit"
-                               id="closeModal"
-                             >
-                               <span class="icon text-white-50 mr-1">
-                                 <i class="fas fa-save"></i>
-                               </span>
-                               <span class="text">{{
-                                 "BOTON_CREAR" | translate
-                               }}</span>
-                             </button>
-                             <button
-                               class="btn btn-danger btn-icon-split"
-                               type="button"
-                               data-dismiss="modal"
-                               aria-label="Close"
-                             >
-                               <span class="icon text-white-50 mr-1">
-                                 <i class="fas fa-times"></i>
-                               </span>
-                               <span class="text">{{
-                                 "BOTON_CANCELAR" | translate
-                               }}</span>
-                             </button>
-                           </div>
-                         </div>
-                       </div>
-                     </div>
-                   </div>
-                 </div>
-               </div>
-             </form>
-           </div>
-         </div>
-       </div>
-     </div>
- 
+  </div>
+</div>

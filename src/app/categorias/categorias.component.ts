@@ -13,11 +13,12 @@ import { GenericoService } from 'src/app/services/generico/generico.service';
 import { CategoriasService } from 'src/app/services/negocio/categorias/categorias.service';
 import { NgxSpinnerService } from "ngx-spinner";
 import Swal from 'sweetalert2';
+import { CONSTANTES } from 'src/app/constants/INVETARIOJS.constants';
 
 @Component({
   selector: 'app-categorias',
   templateUrl: './categorias.component.html',
-  styleUrls: ['./categorias.component.scss'],
+  styleUrls: ['./categorias.component.css'],
   providers: [CategoriaSortService, DecimalPipe],
 })
 export class CategoriasComponent {
@@ -105,34 +106,34 @@ export class CategoriasComponent {
           this.categoriasService
             .crearCategorias(this.categoriaForm.value)
             .subscribe({
-              next: (resp) => {
+              next: (resp:any) => {
 
                 this.spinner.hide();
                 this.closebuttonCrear.nativeElement.click();
                 this.recargarLista();
-                // if (
-                //   resp[CONSTANTES.CODIGO_RESPUESTA] &&
-                //   resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
-                // ) {
-                //   this.categoriaForm.reset();
-                //   this.serviceGenerico.alertaMensajeInformacion(
-                //     resp[CONSTANTES.MENSAJE_RESPUESTA]
-                //   );
-                //   this.spinner.hide();
-                //   this.closebuttonCrear.nativeElement.click();
-                //   this.recargarLista();
-                // } else if (
-                //   resp[CONSTANTES.CODIGO_RESPUESTA] &&
-                //   (resp[CONSTANTES.CODIGO_RESPUESTA] ===
-                //     CONSTANTES.CORREO_EXISTE ||
-                //     resp[CONSTANTES.CODIGO_RESPUESTA] ===
-                //       CONSTANTES.DOCUMENTO_EXISTE)
-                // ) {
-                //   this.serviceGenerico.alertaMensajeInformacion(
-                //     resp[CONSTANTES.MENSAJE_RESPUESTA]
-                //   );
-                //   this.spinner.hide();
-                // }
+                if (
+                  resp[CONSTANTES.CODIGO_RESPUESTA] &&
+                  resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
+                ) {
+                  this.categoriaForm.reset();
+                  this.serviceGenerico.alertaMensajeInformacion(
+                    resp[CONSTANTES.MENSAJE_RESPUESTA]
+                  );
+                  this.spinner.hide();
+                  this.closebuttonCrear.nativeElement.click();
+                  this.recargarLista();
+                } else if (
+                  resp[CONSTANTES.CODIGO_RESPUESTA] &&
+                  (resp[CONSTANTES.CODIGO_RESPUESTA] ===
+                    CONSTANTES.CORREO_EXISTE ||
+                    resp[CONSTANTES.CODIGO_RESPUESTA] ===
+                      CONSTANTES.DOCUMENTO_EXISTE)
+                ) {
+                  this.serviceGenerico.alertaMensajeInformacion(
+                    resp[CONSTANTES.MENSAJE_RESPUESTA]
+                  );
+                  this.spinner.hide();
+                }
               },
               error: (err: any) => {
                 console.error('err', err);
@@ -183,34 +184,33 @@ export class CategoriasComponent {
             this.categoriasService
               .modificarCategorias(this.categoriaForm.value)
               .subscribe({
-                next: (resp) => {
+                next: (resp:any) => {
   
                   this.spinner.hide();
                   this.closebuttonModificar.nativeElement.click();
                   this.recargarLista();
-                  // if (
-                  //   resp[CONSTANTES.CODIGO_RESPUESTA] &&
-                  //   resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
-                  // ) {
-                  //   this.categoriaForm.reset();
-                  //   this.serviceGenerico.alertaMensajeInformacion(
-                  //     resp[CONSTANTES.MENSAJE_RESPUESTA]
-                  //   );
-                  //   this.spinner.hide();
-                  //   this.closebuttonCrear.nativeElement.click();
-                  //   this.recargarLista();
-                  // } else if (
-                  //   resp[CONSTANTES.CODIGO_RESPUESTA] &&
-                  //   (resp[CONSTANTES.CODIGO_RESPUESTA] ===
-                  //     CONSTANTES.CORREO_EXISTE ||
-                  //     resp[CONSTANTES.CODIGO_RESPUESTA] ===
-                  //       CONSTANTES.DOCUMENTO_EXISTE)
-                  // ) {
-                  //   this.serviceGenerico.alertaMensajeInformacion(
-                  //     resp[CONSTANTES.MENSAJE_RESPUESTA]
-                  //   );
-                  //   this.spinner.hide();
-                  // }
+                  if (
+                    resp[CONSTANTES.CODIGO_RESPUESTA] &&
+                    resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
+                  ) {
+                    this.categoriaForm.reset();
+                    this.serviceGenerico.alertaMensajeInformacion(
+                      resp[CONSTANTES.MENSAJE_RESPUESTA]
+                    );
+                    this.spinner.hide();
+                    this.closebuttonCrear.nativeElement.click();
+                    this.recargarLista();
+                  } else if (
+                    resp[CONSTANTES.CODIGO_RESPUESTA] &&
+                    (resp[CONSTANTES.CODIGO_RESPUESTA] ===
+                      CONSTANTES.CORREO_EXISTE ||
+                      resp[CONSTANTES.CODIGO_RESPUESTA] ===
+                        CONSTANTES.DOCUMENTO_EXISTE)
+                  ) {
+                    this.serviceGenerico.alertaMensajeInformacion(
+                      resp[CONSTANTES.MENSAJE_RESPUESTA]
+                    );
+                  }
                 },
                 error: (err: any) => {
                   console.error('err', err);
@@ -263,17 +263,17 @@ export class CategoriasComponent {
   cambiarEstado(item:Categorias){
     this.spinner.show();
     this.categoriasService.cambiarEstadoCategorias(item).subscribe({
-      next: (resp) => {
-        // if (
-        //   resp[CONSTANTES.CODIGO_RESPUESTA] &&
-        //   resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
-        // ) {
-        //   this.serviceGenerico.alertaMensajeInformacion(resp[CONSTANTES.MENSAJE_RESPUESTA]);
+      next: (resp:any) => {
+        if (
+          resp[CONSTANTES.CODIGO_RESPUESTA] &&
+          resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
+        ) {
+          this.serviceGenerico.alertaMensajeInformacion(resp[CONSTANTES.MENSAJE_RESPUESTA]);
 
            this.recargarLista();
-        // } else {
-        //   this.serviceGenerico.alertaMensajeInformacion(resp[CONSTANTES.MENSAJE_RESPUESTA]);
-        // }
+        } else {
+          this.serviceGenerico.alertaMensajeInformacion(resp[CONSTANTES.MENSAJE_RESPUESTA]);
+        }
       },
 
       error: (err: any) => {},

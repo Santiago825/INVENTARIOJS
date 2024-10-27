@@ -58,6 +58,10 @@
   "TOOLTIP_DESBLOQUEAR": "Desbloquear",
   "TOOLTIP_ELIMINAR": "Eliminar",
   "TEXTO_CONFIRMACION_CREAR_CATEGORIA": "¿Está seguro de crear la categoria?",
+  "TEXTO_CONFIRMACION_CREAR_PROVEEDOR": "¿Está seguro de crear la proveedor?",
+  "TEXTO_CONFIRMACION_CREAR_PRODUCTO": "¿Está seguro de crear la producto?",
+
+
   "PLACEHOLDER_IMAGEN": "Seleccione imagen",
 
 
@@ -75,7 +79,7 @@
     "CREAR_CATEGORIA_TITLE":"Crear categoria",
     "MODIFICAR_CATEGORIA_TITLE":"Modificar categoria",
     "NOMBRE_CATEGORIA":"Nombre categoria",
-    "BUSCAR_CATEGORIA":"Buscar categoria",
+    "BUSCAR_CATEGORIA":"Buscar elemento",
     "DETALLE_CATEGORIA":"Detalles categoria"
   },
   "CU_ADMIN_PROVEEDOR":{
