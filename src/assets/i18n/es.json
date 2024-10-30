@@ -35,6 +35,8 @@
   "TITULO_CATEGORIA": "Categoria",
   "TITULO_CANTIDAD": "Cantidad",
   "TITULO_IMAGEN": "Imagen",
+  "TITULO_TIPO_DOCUMENTO": "Tipo documento",
+
   "CAMPO_OBLIGATORIO": "Campo obligatorio",
   "CANTIDAD_CARACTERES": "Supera la longitud máxima",
   "COMPARE_CONTRASEÑA": "Las contraseñas ingresadas no coinciden",
@@ -60,6 +62,10 @@
   "TEXTO_CONFIRMACION_CREAR_CATEGORIA": "¿Está seguro de crear la categoria?",
   "TEXTO_CONFIRMACION_CREAR_PROVEEDOR": "¿Está seguro de crear la proveedor?",
   "TEXTO_CONFIRMACION_CREAR_PRODUCTO": "¿Está seguro de crear la producto?",
+  "TITULO_LOGIN":"Iniciar sesion",
+  "INPUT_CONTRA":"Contraseña",
+  "INPUT_USUARIO":"Usuario",
+  "INPUT_Registro":"Registrarse",
 
 
   "PLACEHOLDER_IMAGEN": "Seleccione imagen",

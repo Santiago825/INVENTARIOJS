@@ -1,0 +1,84 @@
+<div class="container mt-5 d-flex justify-content-center">
+  <form [formGroup]="registroForm" (ngSubmit)="crearUsuario()" class="p-4 border rounded shadow-sm bg-light" style="max-width: 500px; width: 100%;">
+    <h2 class="mb-4 text-center">Registro de Usuario</h2>
+
+    <div class="form-group mb-3">
+      <label for="nombre">Nombre:</label>
+      <input id="nombre" formControlName="nombre" type="text" class="form-control" placeholder="Ingresa tu nombre">
+      <div *ngIf="registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched" class="text-danger">
+        Nombre es requerido y debe tener al menos 3 caracteres.
+      </div>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="apellido">Apellido:</label>
+      <input id="apellido" formControlName="apellido" type="text" class="form-control" placeholder="Ingresa tu apellido">
+      <div *ngIf="registroForm.get('apellido')?.invalid && registroForm.get('apellido')?.touched" class="text-danger">
+        Apellido es requerido y debe tener al menos 3 caracteres.
+      </div>
+    </div>
+
+    <!-- Zona Documento -->
+    <div class="form-group mb-3">
+      <label for="tipoDocumento">  {{ "TITULO_TIPO_DOCUMENTO" | translate }}</label>
+      <select id="tipoDocumento" formControlName="tipoDocumento" class="form-control">
+        <option disabled value="">
+          {{ "TITULO_TIPO_DOCUMENTO" | translate }}
+        </option>
+        <option
+          [value]="item.nombre"
+          *ngFor="let item of tipoDocumento"
+        >
+          {{ item.valor }}
+        </option>
+        <!-- Puedes añadir más opciones según sea necesario -->
+      </select>
+      <div *ngIf="registroForm.get('tipoDocumento')?.invalid && registroForm.get('tipoDocumento')?.touched" class="text-danger">
+        Selecciona un tipo de documento.
+      </div>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="numeroDocumento">Número de Documento:</label>
+      <input id="numeroDocumento" formControlName="numeroDocumento" type="text" class="form-control" placeholder="Ingresa tu número de documento">
+      <div *ngIf="registroForm.get('numeroDocumento')?.invalid && registroForm.get('numeroDocumento')?.touched" class="text-danger">
+        Número de documento es requerido.
+      </div>
+    </div>
+
+    <!-- Otros campos -->
+    <div class="form-group mb-3">
+      <label for="telefono">Teléfono:</label>
+      <input id="telefono" formControlName="telefono" type="text" class="form-control" placeholder="Ingresa tu teléfono">
+      <div *ngIf="registroForm.get('telefono')?.invalid && registroForm.get('telefono')?.touched" class="text-danger">
+        Teléfono es requerido y debe ser numérico con al menos 10 dígitos.
+      </div>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="correo">Correo:</label>
+      <input id="correo" formControlName="correo" type="email" class="form-control" placeholder="Ingresa tu correo electrónico">
+      <div *ngIf="registroForm.get('correo')?.invalid && registroForm.get('correo')?.touched" class="text-danger">
+        Ingrese un correo electrónico válido.
+      </div>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="contrasena">Contraseña:</label>
+      <input id="contrasena" formControlName="contrasena" type="password" class="form-control" placeholder="Ingresa tu contraseña">
+      <div *ngIf="registroForm.get('contrasena')?.invalid && registroForm.get('contrasena')?.touched" class="text-danger">
+        La contraseña debe tener al menos 6 caracteres.
+      </div>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="confirmarContrasena">Confirmar Contraseña:</label>
+      <input id="confirmarContrasena" formControlName="confirmarContrasena" type="password" class="form-control" placeholder="Confirma tu contraseña">
+      <div *ngIf="registroForm.errors?.['noCoincide'] && registroForm.get('confirmarContrasena')?.touched" class="text-danger">
+        Las contraseñas no coinciden.
+      </div>
+    </div>
+
+    <button type="submit" [disabled]="registroForm.invalid" class="btn btn-primary w-100">Registrarse</button>
+  </form>
+</div>

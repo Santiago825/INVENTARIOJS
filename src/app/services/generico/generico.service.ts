@@ -14,6 +14,13 @@ export class GenericoService {
   ) { 
     
   }
+  obtenerTipoDocumento(){
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json; charset=utf-8',
+      'state': `categorias`,
+    });
+    return this.http.get(`http://localhost:8080/consultar_tipo_documento`);
+  }
   obtenerDepartamento(){
     const headers = new HttpHeaders({
       'Content-Type': 'application/json; charset=utf-8',
