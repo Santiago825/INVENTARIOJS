@@ -39,6 +39,7 @@ import { NgxSpinnerModule } from "ngx-spinner";
 import { ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
 import { RegistroUsuarioComponent } from './registro-usuario/registro-usuario.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { RegistroUsuarioComponent } from './registro-usuario/registro-usuario.co
     VentasComponent,
     PuntosVentaComponent,
     LoginComponent,
-    RegistroUsuarioComponent
+    RegistroUsuarioComponent,
+    HomeComponent
     
   ],
   imports: [

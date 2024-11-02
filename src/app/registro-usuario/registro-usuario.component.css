@@ -1,12 +1,4 @@
-
-.bg-login-image {
-    background: url("../../assets/photos/loginImg.jpg");
-    background-position: center;
-    background-size: cover;
-    
-  }
-
-  @font-face {
+@font-face {
     font-family: 'Itim-Regular';
     src: url('../../assets/fonts/Itim-Regular.ttf') format('truetype');
 }
@@ -15,7 +7,7 @@
     font-family: 'Itim-Regular', sans-serif;
     font-weight: bold;
     color: rgb(141, 27, 141);
-    font-size: 8pc;
+    font-size: 3pc;
     text-decoration: none;
 
 }

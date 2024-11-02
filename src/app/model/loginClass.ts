@@ -1,4 +1,4 @@
 export class LoginClass {
-    login: string='';
+    usuario: string='';
     clave: string='';
 }

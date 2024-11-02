@@ -36,7 +36,7 @@
   "TITULO_CANTIDAD": "Cantidad",
   "TITULO_IMAGEN": "Imagen",
   "TITULO_TIPO_DOCUMENTO": "Tipo documento",
-
+  "MENSAJE_INFORMACION":"MENSAJE INFORMACION",
   "CAMPO_OBLIGATORIO": "Campo obligatorio",
   "CANTIDAD_CARACTERES": "Supera la longitud máxima",
   "COMPARE_CONTRASEÑA": "Las contraseñas ingresadas no coinciden",

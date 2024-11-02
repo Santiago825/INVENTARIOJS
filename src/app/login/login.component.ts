@@ -9,6 +9,7 @@ import { CONSTANTES } from 'src/app/constants/INVETARIOJS.constants';
 import { LoginService } from '../services/negocio/Login/login.service';
 import { LoginClass} from '../model/loginClass';
 import { GenericoService } from '../services/generico/generico.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +23,8 @@ export class LoginComponent {
     private spinner: NgxSpinnerService,
     public translate: TranslateService,
     private loginService: LoginService,
-    public serviceGenerico: GenericoService
+    public serviceGenerico: GenericoService,
+    private router: Router
   ) {
     this.translate.use('es');
     this.loginForm = this.fb.group(LOGIN);
@@ -41,44 +43,40 @@ export class LoginComponent {
     }
 
     const hashSHA512 = this.generarSHA512(this.loginForm.get('clave')?.value);
-    console.log('SHA-512:', hashSHA512);
-
+    console.log(this.loginForm.get('clave')?.value);
+    console.log(hashSHA512);
     let login =new LoginClass;
-    login.login=this.loginForm.get('login')?.value
+    login.usuario=this.loginForm.get('login')?.value
     login.clave=hashSHA512
-    console.log(login);
 
     this.spinner.show();
-    // this.loginService.validarLogin(login).subscribe({
-    //   next: (resp: any) => {
-    //     this.spinner.hide();
-    //     if (
-    //       resp[CONSTANTES.CODIGO_RESPUESTA] &&
-    //       resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
-    //     ) {
+    this.loginService.validarLogin(login).subscribe({
+      next: (resp: any) => {
+        this.spinner.hide();
+        if (
+          resp[CONSTANTES.CODIGO_RESPUESTA] &&
+          resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
+        ) {
 
-    //       this.spinner.hide();
-    //     } else if (
-    //       resp[CONSTANTES.CODIGO_RESPUESTA] &&
-    //       (resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.CORREO_EXISTE ||
-    //         resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.DOCUMENTO_EXISTE)
-    //     ) {
-    //       this.serviceGenerico.alertaMensajeInformacion(
-    //         resp[CONSTANTES.MENSAJE_RESPUESTA]
-    //       );
-    //       this.spinner.hide();
-    //     }
-    //   },
-    //   error: (err: any) => {
-    //     console.error('err', err);
-    //   },
+          this.router.navigate(["h/dashboard"]);
 
-    //   complete: () => {
-    //     this.loginForm.reset();
+        } else {
+          this.serviceGenerico.alertaMensajeInformacion(
+            resp[CONSTANTES.MENSAJE_RESPUESTA]
+          );
+          this.spinner.hide();
+        }
+      },
+      error: (err: any) => {
+        console.error('err', err);
+      },
 
-    //     this.spinner.hide();
-    //   },
-    // });
+      complete: () => {
+        this.loginForm.reset();
+
+        this.spinner.hide();
+      },
+    });
   }
 
   validarCampoObligatorio(campo: string) {

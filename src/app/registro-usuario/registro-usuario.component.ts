@@ -6,11 +6,14 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import Swal from 'sweetalert2';
 import { CONSTANTES } from 'src/app/constants/INVETARIOJS.constants';
 import { TranslateService } from '@ngx-translate/core';
+import { registroClass } from 'src/app/model/registroClass';
+import * as CryptoJS from 'crypto-js';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registro-usuario',
   templateUrl: './registro-usuario.component.html',
-  styleUrls: ['./registro-usuario.component.scss'],
+  styleUrls: ['./registro-usuario.component.css'],
 })
 export class RegistroUsuarioComponent {
   registroForm: FormGroup;
@@ -22,6 +25,7 @@ export class RegistroUsuarioComponent {
     public loginService: LoginService,
     private spinner: NgxSpinnerService,
     public translate: TranslateService,
+    private router: Router
 
   ) {
     this.translate.use('es');
@@ -75,9 +79,22 @@ export class RegistroUsuarioComponent {
       },
     });
   }
+  generarSHA512(texto: string): string {
+    const hash = CryptoJS.SHA512(texto);
+    return hash.toString(CryptoJS.enc.Hex); // Convierte el hash en una cadena hexadecimal
+  
+  }
 
+  irALogin() {
+    alert("sanches")
+    this.router.navigate(['login']);
+  }
   // Método para enviar el formulario
   crearUsuario() {
+
+
+
+   
     if (this.registroForm.valid) {
       Swal.fire({
         title:
@@ -100,9 +117,19 @@ export class RegistroUsuarioComponent {
         },
       }).then((result) => {
         if (result.value) {
+          let registro=new registroClass;
+          registro.nombre=this.registroForm.get('nombre')?.value
+          registro.apellido=this.registroForm.get('apellido')?.value
+          registro.tipoDocumento=this.registroForm.get('tipoDocumento')?.value
+          registro.numeroDocumento=this.registroForm.get('numeroDocumento')?.value
+          registro.telefono=this.registroForm.get('telefono')?.value
+          registro.correo=this.registroForm.get('correo')?.value
+          const hashSHA512 = this.generarSHA512(this.registroForm.get('contrasena')?.value);
+          registro.constrasena=hashSHA512;
+          
           this.spinner.show();
           this.loginService
-            .registrarUsuario(this.registroForm.value)
+            .registrarUsuario(registro)
             .subscribe({
               next: (resp: any) => {
                 if (
@@ -113,13 +140,10 @@ export class RegistroUsuarioComponent {
                   this.serviceGenerico.alertaMensajeInformacion(
                     resp[CONSTANTES.MENSAJE_RESPUESTA]
                   );
-                } else if (
-                  resp[CONSTANTES.CODIGO_RESPUESTA] &&
-                  (resp[CONSTANTES.CODIGO_RESPUESTA] ===
-                    CONSTANTES.CORREO_EXISTE ||
-                    resp[CONSTANTES.CODIGO_RESPUESTA] ===
-                      CONSTANTES.DOCUMENTO_EXISTE)
-                ) {
+                  this.router.navigate(["login"]);
+
+                } else {
+                  console.log("abuelita");
                   this.serviceGenerico.alertaMensajeInformacion(
                     resp[CONSTANTES.MENSAJE_RESPUESTA]
                   );
@@ -128,6 +152,7 @@ export class RegistroUsuarioComponent {
               },
               error: (err: any) => {
                 console.error('err', err);
+                console.log("secosno");
               },
 
               complete: () => {
