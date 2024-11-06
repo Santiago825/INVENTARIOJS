@@ -10,6 +10,8 @@ import { LoginService } from '../services/negocio/Login/login.service';
 import { LoginClass} from '../model/loginClass';
 import { GenericoService } from '../services/generico/generico.service';
 import { Router } from '@angular/router';
+import { LocalService } from '../services/negocio/autenticacion/local.service';
+import { AutenticacionModel } from '../model/autenticacion.model';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +26,9 @@ export class LoginComponent {
     public translate: TranslateService,
     private loginService: LoginService,
     public serviceGenerico: GenericoService,
-    private router: Router
+    private router: Router,
+    private localService: LocalService
+
   ) {
     this.translate.use('es');
     this.loginForm = this.fb.group(LOGIN);
@@ -43,8 +47,7 @@ export class LoginComponent {
     }
 
     const hashSHA512 = this.generarSHA512(this.loginForm.get('clave')?.value);
-    console.log(this.loginForm.get('clave')?.value);
-    console.log(hashSHA512);
+    
     let login =new LoginClass;
     login.usuario=this.loginForm.get('login')?.value
     login.clave=hashSHA512
@@ -57,8 +60,33 @@ export class LoginComponent {
           resp[CONSTANTES.CODIGO_RESPUESTA] &&
           resp[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK
         ) {
+           
+          const auth = new AutenticacionModel;
+          auth.usuario = login.usuario;
+          auth.usuarioContr = login.clave;
+          console.log(login.clave);
+          
 
-          this.router.navigate(["h/dashboard"]);
+          this.loginService.getToken( auth ).subscribe({
+            next: (resp1:any) => {
+              if ( resp1[CONSTANTES.CODIGO_RESPUESTA] && resp1[CONSTANTES.CODIGO_RESPUESTA] === CONSTANTES.OK ) {
+                sessionStorage.setItem('t', resp1[ 'token' ]);
+               // console.log(resp1[ 'token' ]);
+                //this.localService.setValueRolUsuario('rol', this.loginService.loginRespuesta.rol);
+               // this.loginService.loginRespuesta = new LoginRespuesta;
+                this.router.navigate(["h/dashboard"]);
+              } else {
+                this.router.navigateByUrl( '/h/login' );
+              }
+            },
+            error: (err: any) => {
+            },
+            complete: () => {
+              this.spinner.hide();
+            }
+
+          } );
+
 
         } else {
           this.serviceGenerico.alertaMensajeInformacion(

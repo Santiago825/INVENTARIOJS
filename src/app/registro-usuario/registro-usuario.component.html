@@ -79,7 +79,12 @@
         </div>
 
         <button type="submit" [disabled]="registroForm.invalid" class="btn btn-primary w-100">Registrarse</button>
+      
       </form>
+      <div class="text-center">
+        <button style="text-decoration: none;" routerLink="/login" class="small btn bg-danger-subtle">{{ 'TITULO_VOLVER' | translate }}</button>
+
+      </div>
     </div>
   </div>
 </div>

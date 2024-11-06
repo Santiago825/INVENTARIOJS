@@ -10,9 +10,10 @@ import { NotificacionesComponent } from './notificaciones/notificaciones.compone
 import { ProvedoresComponent } from './provedores/provedores.component';
 import { RegistroUsuarioComponent } from './registro-usuario/registro-usuario.component';
 import { LoginComponent } from './login/login.component';
-
 import { HomeComponent } from './home/home.component';
 import { BodyComponent } from './body/body.component';
+
+import { AuthGuard } from './guards/auth.guard';  // Asegúrate de importar el guard
 
 const routes: Routes = [
   { path: 'registro', component: RegistroUsuarioComponent },
@@ -21,14 +22,14 @@ const routes: Routes = [
     path: 'h',
     component: BodyComponent,
     children: [
-      { path: 'dashboard', component: DashboardComponent },
-      { path: 'productos', component: ProductosComponent },
-      { path: 'categorias', component: CategoriasComponent },
-      { path: 'provedores', component: ProvedoresComponent },
-      { path: 'puntos-venta', component: PuntosVentaComponent },
-      { path: 'clientes', component: ClientesComponent },
-      { path: 'notificaciones', component: NotificacionesComponent },
-      { path: 'ventas', component: VentasComponent },
+      { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+      { path: 'productos', component: ProductosComponent, canActivate: [AuthGuard] },
+      { path: 'categorias', component: CategoriasComponent, canActivate: [AuthGuard] },
+      { path: 'provedores', component: ProvedoresComponent, canActivate: [AuthGuard] },
+      { path: 'puntos-venta', component: PuntosVentaComponent, canActivate: [AuthGuard] },
+      { path: 'clientes', component: ClientesComponent, canActivate: [AuthGuard] },
+      { path: 'notificaciones', component: NotificacionesComponent, canActivate: [AuthGuard] },
+      { path: 'ventas', component: VentasComponent, canActivate: [AuthGuard] },
     ],
   },
 
@@ -40,3 +41,4 @@ const routes: Routes = [
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
+  

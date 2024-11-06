@@ -80,16 +80,22 @@
       </div>
     
     </ng-template>
+    <app-profile-modal #profileModal ></app-profile-modal>
 
     <ng-template #userOverley>
-      <div class="overlay overlay-user overlay-fall">
+      <div class="overlay overlay-user overlay-fall" cdkMenu>
         <ul>
-          <li *ngFor="let item of userItems">
-            <i class="icon" [ngClass]="item.icon"]></i>
-            <span>{{item.label}}</span>
+          <li *ngFor="let item of userItems" (click)="cerrarSesion(item)">
+            <a>
+              <i class="icon" [ngClass]="item.icon"></i>
+              <span>{{item.label}}</span>
+
+            </a>
           </li>
         </ul>
 
       </div>
 
     </ng-template>
+
+

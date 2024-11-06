@@ -40,6 +40,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
 import { RegistroUsuarioComponent } from './registro-usuario/registro-usuario.component';
 import { HomeComponent } from './home/home.component';
+import { ProfileModalComponent } from './profile-modal/profile-modal.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { HomeComponent } from './home/home.component';
     PuntosVentaComponent,
     LoginComponent,
     RegistroUsuarioComponent,
-    HomeComponent
+    HomeComponent,
+    ProfileModalComponent
     
   ],
   imports: [

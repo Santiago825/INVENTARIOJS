@@ -143,7 +143,6 @@ export class RegistroUsuarioComponent {
                   this.router.navigate(["login"]);
 
                 } else {
-                  console.log("abuelita");
                   this.serviceGenerico.alertaMensajeInformacion(
                     resp[CONSTANTES.MENSAJE_RESPUESTA]
                   );
